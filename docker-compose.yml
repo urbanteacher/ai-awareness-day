@@ -31,6 +31,8 @@ services:
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
+      # A development copy: lets ?santa-day=N preview Find Santa (plugins/aiad-core/modules/literacy-table/santa.php).
+      WP_ENVIRONMENT_TYPE: local
       # Debate Network plugin: send mail to Mailpit instead of the internet.
       AIADN_SMTP_HOST: mailpit
       AIADN_SMTP_PORT: "1025"

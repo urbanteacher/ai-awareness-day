@@ -115,6 +115,9 @@ function aiad_bundled_plugin_sentinel_files(): array {
 			// The AI Literacy Periodic Table changes often on its own: any of these newer refreshes the copy.
 			'modules/literacy-table/table.php',
 			'modules/literacy-table/admin.php',
+			'modules/literacy-table/santa.php',
+			'assets/js/literacy-santa.js',
+			'data/literacy-table/santa.json',
 			'assets/js/literacy-table.js',
 			'assets/css/pages/ai-literacy-periodic-table.css',
 			'data/literacy-table/compounds.json',

@@ -719,6 +719,8 @@
 					}
 				}
 			}
+			// Tells other scripts which element is showing (Find Santa, literacy-santa.js, fills its check in the panel).
+			root.dispatchEvent( new CustomEvent( 'alpt:show', { bubbles: true, detail: { index: index, sym: el[ 0 ] } } ) );
 			// Announced last, once the panel is showing (on narrow screens it is hidden until a tile is chosen).
 			if ( shownOnce ) {
 				panelSay.textContent = el[ 1 ] + '. ' + el[ 3 ];

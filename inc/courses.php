@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function aiad_course_pages(): array {
 	return array(
 		'courses'    => array( 'ai-under-the-hood', 'sand-to-sentence', 'answer-to-action', 'agent-to-team', 'ai-exam' ),
-		'challenges' => array( 'christmas-countdown' ),
+		'challenges' => array(),
 	);
 }
 
@@ -65,6 +65,13 @@ function aiad_course_serve(): void {
 	if ( '' === $slug ) {
 		// /courses/ opens the hub; /challenges/ has no index page yet, so it goes there too.
 		wp_safe_redirect( home_url( '/courses/' . AIAD_COURSES_HUB . '/' ), 302 );
+		exit;
+	}
+
+	// Pages that have moved on: the Christmas countdown became Find Santa on the AI Literacy Periodic Table (its files
+	// are in archive/christmas-countdown-2026/).
+	if ( 'challenges' === $area && 'christmas-countdown' === $slug && function_exists( 'aiad_literacy_table_url' ) ) {
+		wp_safe_redirect( aiad_literacy_table_url(), 301 );
 		exit;
 	}
 

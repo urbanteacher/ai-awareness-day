@@ -724,6 +724,8 @@ function aiad_render_literacy_table(): string {
 				<p class="alpt-panel__labels"><span class="alpt-panel__family" data-alpt-out="family"><?php echo esc_html( $families[ $first['family'] ]['name'] ); ?></span> <span class="alpt-panel__theme alpt-th--<?php echo esc_attr( $first['theme'] ); ?>" data-alpt-theme-label><?php echo esc_html( sprintf( /* translators: %s: theme name, such as Safe */ __( '%s theme', 'aiad-core' ), $strands[ $first['theme'] ] ?? '' ) ); ?></span> <span class="alpt-panel__year" data-alpt-out="year"><?php echo esc_html( aiad_literacy_year_label( $first ) ); ?></span></p>
 				<h2 class="alpt-panel__title" data-alpt-out="title"><?php echo esc_html( $first['name'] ); ?></h2>
 				<p class="alpt-panel__def" data-alpt-out="def"><?php echo esc_html( $first['def'] ); ?></p>
+				<?php // Find Santa (December): "Is Santa here?" for the word showing, filled by literacy-santa.js. ?>
+				<div class="alpt-santa-check" data-alpt-santa-slot hidden></div>
 				<?php if ( aiad_literacy_flows_ready() ) : ?>
 				<button type="button" class="alpt-flow-cta" data-alpt-flow hidden><span class="alpt-flow-cta__play" aria-hidden="true"></span><span class="alpt-flow-cta__text"><b><?php esc_html_e( 'See how it works', 'aiad-core' ); ?></b><small data-alpt-flow-from>&nbsp;</small></span></button>
 				<?php endif; ?>
@@ -1292,7 +1294,8 @@ function aiad_render_literacy_week(): string {
 </div>
 <?php if ( $aiad_away ) : ?></div><?php endif; ?>
 	<?php
-	return (string) ob_get_clean();
+	// From 1 to 25 December the table's own page has the Find Santa riddle in this card's place (santa.php).
+	return (string) ob_get_clean() . ( $aiad_away ? '' : aiad_render_literacy_santa() );
 }
 
 /**
@@ -1347,6 +1350,8 @@ function aiad_register_literacy_table(): void {
 	// styles still print after it, and still print at all under another theme.
 	wp_register_style( 'aiad-literacy-table', aiad_core_url( $css ), array(), aiad_core_asset_version( $css ) );
 	wp_register_script( 'aiad-literacy-table', aiad_core_url( $js ), array(), aiad_core_asset_version( $js ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
+	$santa  = 'assets/js/literacy-santa.js';
+	wp_register_script( 'aiad-literacy-santa', aiad_core_url( $santa ), array(), aiad_core_asset_version( $santa ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
 	wp_register_script( 'aiad-literacy-table-edit', aiad_core_url( $editor ), array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-server-side-render' ), aiad_core_asset_version( $editor ), true );
 
 	register_block_type(

@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Find Santa · AI Literacy Periodic Table (mock)</title>
+<link rel="stylesheet" href="../../css/base/fonts.css">
+<link rel="stylesheet" href="../../css/base/tokens.css">
+<style>
+/* MOCK: the AI Literacy Periodic Table in December, with a daily "Find Santa" riddle. Not wired to WordPress. */
+:root{
+  --ink:#231F20; --cream:#F6F4ED; --pine:#123F35; --pine-2:#18513F; --berry:#C8102E; --gold:#F3C44F; --snow:#FFFFFF;
+  font:16px/1.45 'AIAD Sans',Arial,sans-serif; color:var(--ink); background:var(--cream);
+}
+*{box-sizing:border-box} body{margin:0} h1,h2,h3,p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.f-foundations{--fam:#E3E8EF;--deep:#334155}.f-generative{--fam:#EEE6FF;--deep:#6D28D9}.f-predictive{--fam:#DFE9FF;--deep:#1D4ED8}
+.f-agents{--fam:#FFEDD5;--deep:#B45309}.f-automation{--fam:#D5F2EC;--deep:#0F766E}.f-governance{--fam:#FFE1E7;--deep:#BE123C}.f-infra{--fam:#E8F3D6;--deep:#3F6212}
+
+/* Site header stand-in */
+.site{display:flex;justify-content:space-between;align-items:center;padding:.9rem clamp(1rem,3vw,2.5rem);border-bottom:1px solid #dcd7cc;font-weight:700}
+.site small{display:block;font-weight:400;font-size:.7rem;color:#54504E;text-align:right}
+.mock-bar{display:flex;gap:.6rem;align-items:center;justify-content:center;flex-wrap:wrap;padding:.45rem 1rem;background:#fff3c4;font-size:.85rem;border-bottom:1px solid #e6d58f}
+.mock-bar select,.mock-bar button{font-size:.85rem;padding:.2rem .5rem;border:1px solid #b9a75a;background:#fff;border-radius:4px}
+
+/* Page intro, as the table page */
+.intro{max-width:1400px;margin:0 auto;padding:clamp(2rem,4vw,3.5rem) clamp(1rem,2.5vw,2rem) .5rem;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 3rem;align-items:end}
+.intro .kicker,.intro h1,.intro .lead{grid-column:1}
+.kicker{font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.intro h1{margin:.9rem 0 .9rem;font-size:clamp(2.6rem,5vw,4.6rem);line-height:1;letter-spacing:-.035em}
+.lead{font-size:1.15rem;max-width:44ch}
+
+/* Today's Santa riddle: the Word of the week card's pattern (ink, hard shadow, tilted sticker and tile, the
+   riddle as a quote), with the Responsible green and a Santa hat. */
+.santa-card{--accent:#D7263D;--accent-text:#FF8F9C;grid-column:2;grid-row:1 / span 3;position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:.9rem 1.1rem;align-items:center;
+  margin:1.75rem .5rem .5rem 0;padding:2.1rem 1.4rem 1.25rem;background:var(--ink);color:var(--cream);box-shadow:8px 8px 0 var(--accent)}
+.santa-card__sticker{position:absolute;top:-.85rem;right:1.1rem;padding:.3rem .65rem;background:var(--accent);color:#fff;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transform:rotate(3deg)}
+.santa-card__tile{position:relative;width:3.6rem;height:3.6rem;display:flex;align-items:flex-end;padding:.4rem .5rem;background:#FFE1E7;transform:rotate(-4deg);
+  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%)}
+.santa-card__q{color:#BE123C;font-size:1.8rem;font-weight:700;line-height:1}
+.santa-card__hat{position:absolute;top:-2px;right:3px;width:34px;transform:rotate(14deg)}
+.santa-card__head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.2rem .9rem}
+.santa-card__label{color:var(--accent-text);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.santa-card__name{font-size:clamp(1.2rem,1.7vw,1.45rem);letter-spacing:-.03em;line-height:1.05}
+/* The riddle is the card's main feature: large, in a solid red frame, on ink so the snow passes behind it. */
+.santa-card__riddle{grid-column:1 / -1;padding:1rem 1.2rem;border:3px solid var(--accent);background:var(--ink);font-size:clamp(1.3rem,2.1vw,1.75rem);font-weight:700;line-height:1.3;letter-spacing:-.01em}
+.santa-card__status{grid-column:1 / -1;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem}
+.santa-card__guesses{display:inline-flex;align-items:center;gap:.5rem}
+.santa-card__meta{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#cfcac0}
+.gifts{display:inline-flex;gap:.3rem}
+.gift{width:14px;height:14px;background:var(--accent-text,#D7263D);clip-path:polygon(0 0,calc(100% - 4px) 0,100% 4px,100% 100%,0 100%)}
+.gift.used{background:transparent;box-shadow:inset 0 0 0 1.5px #6b6662}
+.santa-card__hint{font-size:.95rem;color:#e7e3da}
+.santa-card__actions{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:.5rem}
+.s-btn{min-height:2.4rem;padding:.4rem .9rem;border:2px solid var(--cream);background:transparent;color:var(--cream);font-size:.9rem;font-weight:700}
+.s-btn--main{border-color:var(--accent);background:var(--accent);color:#fff}
+.s-btn:hover{background:var(--cream);color:var(--ink);border-color:var(--cream)}
+.santa-card .santa-card__famhint{grid-column:1 / -1;justify-self:start;margin:0;font-size:1rem;padding:.45rem .8rem}
+.s-btn[aria-expanded="true"]{background:var(--cream);color:var(--ink);border-color:var(--cream)}
+.santa-card__how{grid-column:1 / -1;font-size:.92rem;color:#e7e3da;padding-top:.2rem}
+.santa-card__how[hidden]{display:none}
+
+/* Christmas decorations inside the card, behind its words: lights along the top, falling snow, holly. */
+.santa-card__deco{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.santa-card > :not(.santa-card__deco):not(.santa-card__sticker){position:relative;z-index:1}
+.santa-card__sticker{z-index:2}
+.santa-lights{position:absolute;left:0;top:0;width:100%;height:30px;overflow:visible}
+.santa-lights .bulb{transform-box:fill-box;transform-origin:center top;animation:twinkle 2.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:1}50%{opacity:.35}}
+.santa-snow i{position:absolute;top:-8px;width:var(--s);height:var(--s);border-radius:50%;background:#fff;opacity:var(--o);
+  animation:fall var(--d) linear var(--delay) infinite}
+@keyframes fall{from{transform:translate(0,0)}to{transform:translate(var(--x),var(--fall,360px))}}
+.santa-holly{position:absolute;right:-6px;bottom:-8px;width:96px;opacity:.95}
+@media (prefers-reduced-motion:reduce){.santa-snow i{animation:none;top:var(--y)}.santa-lights .bulb{animation:none}}
+
+/* The result, as a small card in the table's style: cream, cut corner, red label, the guesses as squares. */
+.share-card{margin:.8rem 0 1rem;padding:.9rem 1rem .85rem;background:var(--cream);color:var(--ink);border-left:6px solid #D7263D;
+  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%)}
+.share-card p{margin:0}
+.share-card__label{color:#B3172C;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.share-card__row{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:.6rem 0 .5rem}
+.share-card__sq{display:inline-flex;gap:.4rem}
+.sq{position:relative;width:30px;height:30px;display:grid;place-items:center;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%)}
+.sq--miss{background:#E7E2D6}
+.sq--miss::before,.sq--miss::after{content:"";position:absolute;width:15px;height:2.4px;border-radius:2px;background:#6b6662;transform:rotate(45deg)}
+.sq--miss::after{transform:rotate(-45deg)}
+.sq--found{background:#D7263D}.sq--found svg{width:22px}
+.sq--spare{background:transparent;box-shadow:inset 0 0 0 1.5px #c9c2b4}
+.share-card__streak{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#54504E}
+.share-card__result{font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
+.share-card__url{margin-top:.15rem;font-size:.85rem;color:#54504E}
+/* Show to class: the riddle alone on the board */
+.board{position:fixed;inset:0;z-index:50;background:var(--ink);color:var(--cream);display:flex;flex-direction:column;justify-content:center;padding:6vh 8vw}
+.board[hidden]{display:none}
+.board__label{color:#FF8F9C;font-size:clamp(.9rem,1.4vw,1.2rem);font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.board__q{margin-top:1.2rem;max-width:26ch;font-size:clamp(2rem,4.6vw,4.4rem);font-weight:700;line-height:1.15;letter-spacing:-.02em}
+.board__hint{margin-top:1.6rem;display:inline-flex;align-items:center;gap:.8rem;align-self:flex-start;padding:.6rem 1rem;background:var(--fam);color:var(--ink);font-size:clamp(1.1rem,2vw,1.8rem);font-weight:700}
+.board__hint[hidden]{display:none}
+.board__hint small{font-size:.6em;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--deep)}
+.board__bar{position:absolute;left:0;right:0;bottom:1.5rem;display:flex;justify-content:center}
+.board__btn{padding:.7rem 1.6rem;border:2px solid #D7263D;background:#D7263D;color:#fff;font-size:1.05rem;font-weight:700}
+.board__btn[aria-expanded="true"]{background:transparent;color:var(--cream);border-color:var(--cream)}
+.board__close{position:absolute;top:1rem;right:1rem;padding:.6rem 1rem;border:2px solid var(--cream);background:transparent;color:var(--cream);font-weight:700}
+.santa-card__hint.warm{color:#FFB36B}.santa-card__hint.cold{color:var(--a27-safe,#00BEDD)}
+
+/* The table */
+.table-wrap{max-width:1400px;margin:0 auto;padding:clamp(1rem,2.5vw,2rem)}
+.table-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin-bottom:.9rem}
+.table-head h2{font-size:clamp(1.3rem,2.2vw,1.9rem);letter-spacing:-.03em}
+.table-head p{color:#54504E;font-size:.95rem}
+.grid{display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:4px}
+.tile{position:relative;aspect-ratio:1/1.05;border:0;padding:.3rem .35rem;background:var(--fam);text-align:left;display:flex;flex-direction:column;justify-content:space-between;
+  clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,0 100%);transition:transform .15s,opacity .25s,filter .25s}
+.tile:hover{transform:translateY(-2px)}
+.tile .n{font-size:.58rem;align-self:flex-end;opacity:.7}
+.tile .s{font-size:clamp(.9rem,1.6vw,1.6rem);font-weight:800;color:var(--deep);line-height:1}
+.tile .nm{font-size:.55rem;line-height:1.1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+.fam-label{grid-column:span 2;align-self:end;font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--deep);padding-bottom:.2rem}
+
+/* The word's card (as the table's panel), with today's Santa check at the foot */
+dialog{border:0;padding:0;max-width:min(480px,calc(100vw - 2rem));width:100%;box-shadow:0 30px 80px rgba(0,0,0,.4);overflow:hidden}
+dialog::backdrop{background:rgba(20,18,18,.55)}
+.c-top{position:relative;background:var(--fam);padding:1.1rem 1.3rem 1.2rem;min-height:11rem;display:flex;flex-direction:column;justify-content:flex-end}
+.c-x{position:absolute;top:.75rem;right:.75rem;width:44px;height:44px;border:0;border-radius:50%;background:rgba(35,31,32,.1)}
+.c-x::before,.c-x::after{content:"";position:absolute;left:50%;top:50%;width:18px;height:2.6px;border-radius:2px;background:var(--ink);transform:translate(-50%,-50%) rotate(45deg)}
+.c-x::after{transform:translate(-50%,-50%) rotate(-45deg)}
+.c-n{position:absolute;top:1.1rem;left:1.3rem;font-size:1rem}
+.c-sym{font-size:4.2rem;font-weight:800;line-height:1;color:var(--deep);margin-top:1.6rem}
+.c-name{font-size:1.6rem;letter-spacing:-.02em;margin-top:.35rem}
+.c-fam{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.75;margin-top:.2rem}
+.c-santa{position:absolute;right:1rem;bottom:-.5rem;width:130px}
+.c-santa .santa{width:130px;height:130px}
+.c-body{padding:1.1rem 1.3rem 1.3rem}
+.c-def{font-size:1.05rem;color:#3b3738}
+.c-hunt{margin-top:1rem;padding-top:1rem;border-top:2px dashed #d8d2c4}
+.c-hunt:empty{display:none}
+.c-msg{font-weight:700;font-size:1.1rem}
+.c-msg small{display:block;font-weight:600;font-size:.95rem;color:#54504E;margin-top:.25rem}
+.c-ask{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem 1.2rem}
+.c-ask .c-left{margin:0}
+.c-hunt .c-left{display:flex;align-items:center;gap:.5rem;margin:.7rem 0 .9rem;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#54504E}
+.c-hunt .gift{background:var(--ink)}.c-hunt .gift.used{background:transparent;box-shadow:inset 0 0 0 1.5px #9b958d}
+.c-found{background:var(--ink);color:var(--cream);padding:1rem 1.1rem;box-shadow:6px 6px 0 #D7263D}
+.c-found h3{font-size:1.4rem;letter-spacing:-.02em}
+.share{display:block;font-family:ui-monospace,Menlo,monospace;background:rgba(255,255,255,.08);padding:.6rem;margin:.6rem 0 .8rem;white-space:pre-line;text-align:center}
+.btns{display:flex;gap:.6rem;flex-wrap:wrap}
+.btn{padding:.7rem 1.1rem;border:2px solid var(--ink);background:#fff;font-weight:700}
+.btn--main{background:#D7263D;border-color:#D7263D;color:#fff}
+.next{margin-top:.7rem;font-size:.9rem;color:#cfcac0}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Phone: the riddle stays pinned while you scroll the families */
+@media (max-width:760px){
+  .intro{grid-template-columns:1fr}
+  .santa-card{grid-column:1;grid-row:auto}
+  .pin{position:sticky;top:0;z-index:5;background:var(--ink);color:var(--cream);padding:.6rem 1rem;display:flex;gap:.7rem;align-items:center;font-size:.92rem;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+  .pin .gifts{flex:none}
+  .pin{flex-wrap:wrap}
+  #pin-hint{flex-basis:100%;font-size:.84rem;color:#FF8F9C}
+  #pin-hint:empty{display:none}
+  .pin p{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .grid{display:block}
+  .fam{margin-bottom:1.2rem}
+  .fam-label{display:block;font-size:.8rem;margin-bottom:.4rem}
+  .fam-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  .tile{aspect-ratio:1/1.1;padding:.35rem .4rem;grid-row:auto!important;grid-column:auto!important}
+  .tile .s{font-size:1.45rem}.tile .nm{font-size:.66rem}.tile .n{font-size:.62rem}
+  .table-head{display:block}.table-head p{margin-top:.3rem}
+}
+@media (min-width:761px){.pin{display:none}.fam,.fam-tiles{display:contents}}
+</style>
+</head>
+<body>
+<header class="site"><span>AI Awareness Day home</span><span>AI Awareness Day 2027<small>Keep Humans in the Loop</small></span></header>
+<div class="mock-bar" role="note"><strong>Mock only.</strong> Try another day:
+  <select id="pick" aria-label="Mock day"></select>
+  <button id="reset" type="button">Reset today</button>
+</div>
+
+<section class="intro">
+  <p class="kicker">AI literacy for teachers and students · Keep humans in the loop</p>
+  <h1>The AI Literacy Periodic Table</h1>
+  <p class="lead">AI literacy means more than knowing the words. This table helps students and staff understand AI, question it, and decide when a human must stay in charge.</p>
+  <div class="santa-card" aria-labelledby="hunt-title">
+    <div class="santa-card__deco" aria-hidden="true">
+      <svg class="santa-lights" id="santa-lights" preserveAspectRatio="none"></svg>
+      <div class="santa-snow" id="santa-snow"></div>
+      <svg class="santa-holly" viewBox="0 0 90 60"><path d="M45 34C34 20 18 22 6 14c4 10 0 16 6 22-6 2-8 6-6 10 12-6 26 0 39-12z" fill="#2F7D4F"/><path d="M45 34C56 20 72 22 84 14c-4 10 0 16-6 22 6 2 8 6 6 10-12-6-26 0-39-12z" fill="#1F6A40"/><path d="M45 34C36 26 22 30 12 28M45 34C54 26 68 30 78 28" stroke="#163F2A" stroke-width="1.4" fill="none"/><circle cx="40" cy="38" r="6" fill="#D7263D"/><circle cx="51" cy="37" r="6" fill="#E4314A"/><circle cx="45.5" cy="46" r="6" fill="#C21D33"/><circle cx="38" cy="36" r="1.6" fill="#fff" opacity=".7"/><circle cx="49" cy="35" r="1.6" fill="#fff" opacity=".7"/></svg>
+    </div>
+    <span class="santa-card__sticker" aria-hidden="true">New riddle every day</span>
+    <div class="santa-card__tile" aria-hidden="true"><span class="santa-card__q">?</span><svg class="santa-card__hat" viewBox="0 0 60 44"><path d="M6 34C10 14 26 2 44 6c6 2 9 8 9 14-8-5-16-3-22 3z" fill="#E4002B"/><rect x="2" y="30" width="44" height="11" fill="#fff"/><circle cx="53" cy="22" r="6" fill="#fff"/></svg></div>
+    <div class="santa-card__head">
+      <h2 class="santa-card__name" id="hunt-title">Where is Santa hiding today?</h2>
+      <p class="santa-card__label"><span id="day-label">Day 7 of 25</span> · <span id="streak">4-day streak</span></p>
+    </div>
+    <p class="santa-card__riddle" id="riddle"></p>
+    <div class="santa-card__status" aria-live="polite">
+      <span class="santa-card__guesses"><span class="santa-card__meta">Guesses</span><span class="gifts" id="gifts"></span></span>
+      <span class="santa-card__hint" id="hint">Open a word’s card and press “Is Santa here?”</span>
+    </div>
+    <p class="board__hint santa-card__famhint" id="card-hint" hidden></p>
+    <p class="santa-card__how" id="how" hidden>Santa is hiding in one word’s card. Read the riddle, open any card to read it, and press “Is Santa here?” when you think you’ve found him. You have three guesses; a wrong one tells you if you’re warm (right family) or cold. Opening cards to read them never uses a guess. A new riddle every day from 1 to 25 December.</p>
+    <div class="santa-card__actions">
+      <button class="s-btn s-btn--main" type="button" id="to-class">Show to class</button>
+      <button class="s-btn" type="button" id="card-hint-btn" aria-expanded="false" aria-controls="card-hint">Hint</button>
+      <button class="s-btn" type="button" id="how-btn" aria-expanded="false" aria-controls="how">How to play</button>
+    </div>
+  </div>
+</section>
+
+<div class="pin" aria-hidden="true"><span class="gifts" id="pin-gifts"></span><p id="pin-riddle"></p><span id="pin-hint"></span></div>
+
+<main class="table-wrap">
+  <div class="table-head">
+    <h2>The AI Literacy Periodic Table</h2>
+    
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<div class="board" id="board" hidden role="dialog" aria-label="Today's riddle on the board">
+  <button class="board__close" type="button" id="board-close">Close</button>
+  <p class="board__label" id="board-label"></p>
+  <p class="board__q" id="board-q"></p>
+  <p class="board__hint" id="board-hint" hidden></p>
+  <div class="board__bar"><button class="board__btn" type="button" id="board-hint-btn" aria-expanded="false" aria-controls="board-hint">Hint</button></div>
+</div>
+<dialog id="card" aria-labelledby="c-name">
+  <div class="c-top" id="c-top">
+    <button class="c-x" type="button" id="c-close" aria-label="Close"></button>
+    <span class="c-n" id="c-n"></span>
+    <span class="c-sym" id="c-sym"></span>
+    <h2 class="c-name" id="c-name"></h2>
+    <span class="c-fam" id="c-fam"></span>
+    <div class="c-santa" id="c-santa" hidden><svg class="santa" viewBox="0 0 120 120" aria-hidden="true">
+      <circle cx="60" cy="72" r="34" fill="#F6D5BE"/>
+      <path d="M26 74c4 30 20 40 34 40s30-10 34-40c-10 8-22 10-34 10s-24-2-34-10z" fill="#fff"/>
+      <ellipse cx="60" cy="82" rx="12" ry="5" fill="#fff"/>
+      <circle cx="48" cy="66" r="3.4" fill="#231F20"/><circle cx="72" cy="66" r="3.4" fill="#231F20"/>
+      <circle cx="60" cy="75" r="5" fill="#E58A7B"/>
+      <path d="M24 52c6-28 30-42 58-34 10 3 18 12 20 22-14-6-24-4-32 2z" fill="#C8102E"/>
+      <rect x="22" y="46" width="76" height="14" rx="7" fill="#fff"/>
+      <circle cx="104" cy="40" r="8" fill="#fff"/>
+    </svg></div>
+  </div>
+  <div class="c-body">
+    <p class="c-def" id="c-def"></p>
+    <div class="c-hunt" id="c-hunt" aria-live="polite"></div>
+  </div>
+</dialog>
+
+<script>
+const EL = [["Ai", "Artificial Intelligence", "foundations", 1, 1, "Computer systems, built and used by people, that do tasks we once thought only humans could do, such as translating text, recognising faces in photos or recommending what to watch next."], ["Ls", "Latent Space", "foundations", 1, 2, "The space of numbers inside a model where each input is placed as a point, so similar things, such as ‘cat’ and ‘kitten’, end up close together. Each point is an embedding (Em)."], ["Rsi", "Recursive Self-Improvement", "foundations", 1, 16, "AI helping to build better AI, which could then build better AI still. The idea dates from 1965; today, AI companies already use their own models to help train and test the next ones."], ["Si", "Superintelligence", "foundations", 1, 17, "A hypothetical AI that would far surpass the best human minds in almost every field. Experts disagree on whether, or when, it could arrive."], ["Agi", "Artificial General Intelligence", "foundations", 1, 18, "A hypothetical AI able to match or exceed human ability across almost any intellectual task, rather than excelling in one narrow domain."], ["Ml", "Machine Learning", "foundations", 2, 1, "A branch of AI where systems learn patterns from data instead of following hand-written rules."], ["Dl", "Deep Learning", "foundations", 2, 2, "Machine learning using neural networks with many layers — the approach behind most modern breakthroughs in vision, speech and language."], ["Nn", "Neural Network", "foundations", 3, 1, "A model made of layers of connected nodes, loosely inspired by the brain, that learns by adjusting the strength of its connections."], ["Al", "Algorithm", "foundations", 3, 2, "A step-by-step set of instructions for solving a problem; in machine learning, the method a system uses to learn from data."], ["Md", "Model", "foundations", 4, 1, "What you get after an algorithm has learned from data: the trained program that turns an input, such as a question or a photo, into an output."], ["Tr", "Training", "foundations", 4, 2, "The process of feeding data to a model and adjusting its internal settings until its outputs improve."], ["If", "Inference", "foundations", 5, 1, "Using a trained model to make predictions or generate output on new inputs — the “running” phase after training."], ["Pm", "Parameters", "foundations", 5, 2, "The millions, billions or even trillions of numbers inside a model that it adjusts as it learns, like dials being tuned. A model’s size is often quoted in parameters."], ["Tk", "Token", "foundations", 6, 1, "The small chunk of text — a word, part of a word or a symbol — that language models read and write."], ["Em", "Embedding", "foundations", 6, 2, "A list of numbers that represents the meaning of text, images or other data, so that similar things sit close together."], ["Tf", "Transformer", "foundations", 7, 1, "The design behind today’s large language models, introduced in 2017. Its “attention” lets it weigh up how each word in a passage relates to every other word."], ["Fm", "Foundation Model", "foundations", 7, 2, "A large model trained on broad data that can be adapted to many different tasks, rather than built for just one."], ["Ll", "Large Language Model", "generative", 4, 3, "An AI model trained on huge amounts of text to predict the next word (token), which lets it generate replies, summaries and translations – the kind of model behind most chatbots."], ["Ga", "Generative AI", "generative", 4, 4, "AI that creates new content — text, images, audio, video or code — rather than only analysing existing data."], ["Pr", "Prompt", "generative", 4, 5, "The instruction or input you give a generative model to get a response."], ["Pe", "Prompt Engineering", "generative", 4, 6, "The craft of writing and structuring prompts to get more accurate, useful and consistent outputs."], ["Cw", "Context Window", "generative", 4, 7, "The maximum amount of text, measured in tokens, that a model can take into account at once."], ["Mm", "Multimodal AI", "generative", 5, 3, "A model that can take in or produce more than one type of data, such as text, images and audio together."], ["Df", "Diffusion Model", "generative", 5, 4, "A generative model trained on pictures that have had random speckles (‘noise’) added, so it learns to remove the noise. To make a new picture, it starts from pure noise and cleans it up step by step."], ["Gn", "Generative Adversarial Network", "generative", 5, 5, "Two networks in competition — one generates content, the other judges it — until the output looks realistic."], ["Ti", "Text-to-Image", "generative", 5, 6, "AI that makes a picture from a written description, such as ‘a fox reading a book in a library, cartoon style’. The tool fills in many details you did not ask for."], ["Ts", "Text-to-Speech", "generative", 5, 7, "Converting written text into natural-sounding synthetic speech."], ["Ft", "Fine-Tuning", "generative", 6, 3, "Taking a model that has already been trained on lots of general data and training it a bit more on a smaller set of examples, such as medical notes, so it does better at one job."], ["Rg", "Retrieval-Augmented Generation", "generative", 6, 4, "Retrieval-augmented generation (RAG): a system first looks up relevant documents, such as a school’s policies, and gives them to the model so its answer can draw on them. The answer can still be wrong."], ["Te", "Temperature", "generative", 6, 5, "A setting that controls randomness in output: low is focused and predictable, high is varied and creative."], ["Ct", "Chain-of-Thought", "generative", 6, 6, "Asking a model to write out steps before its final answer, which often improves results. The written steps may not show how the answer was really produced. Compare Reasoning Model (Rm)."], ["Fs", "Few-Shot Learning", "generative", 6, 7, "Showing a model a handful of examples in the prompt so it can pick up a new task without retraining."], ["Rm", "Reasoning Model", "generative", 7, 3, "A model trained to spend extra computation “thinking” through a problem before answering, improving maths, coding and logic."], ["Sd", "Synthetic Data", "generative", 7, 4, "Artificially generated data used to train or test models when real data is scarce, sensitive or expensive."], ["Ha", "Hallucination", "generative", 7, 5, "When an AI produces confident-sounding information that is false or made up, such as a book that does not exist. It happens mainly because the model predicts likely-sounding words rather than checking facts."], ["Dk", "Deepfake", "generative", 7, 6, "Realistic AI-made or edited video, audio or images showing people saying or doing things they never did. Sexual fakes of under-18s are illegal; if you see one, tell a trusted adult or use Childline’s Report Remove."], ["Vc", "Vibe Coding", "generative", 7, 7, "Building software by describing what you want in plain language and accepting the code an AI tool writes, often without reading or checking it closely."], ["Ce", "Context Engineering", "generative", 8, 3, "Structuring everything you give an AI, including background documents, rules and examples, rather than relying on a single clever prompt."], ["Gv", "Generative Video", "generative", 8, 4, "AI that creates video clips from a text description, an image or another video."], ["Sp", "AI Slop", "generative", 8, 5, "Low-effort, mass-produced AI text, images and videos that flood social media and search results."], ["2d", "2D Design", "generative", 8, 6, "Flat designs such as drawings, logos, layouts and laser-cut parts. AI tools can now suggest, generate and refine them."], ["3d", "3D Design & CAD", "generative", 8, 7, "Designing objects in three dimensions with computer-aided design (CAD) software, ready to model, 3D print or manufacture. AI can generate and improve designs."], ["Su", "Supervised Learning", "predictive", 4, 8, "Training a model on labelled examples, where every input comes with the correct answer, such as thousands of photos each tagged ‘cat’ or ‘dog’."], ["Un", "Unsupervised Learning", "predictive", 4, 9, "Training a model to find patterns or groups in data that has no labels, such as sorting songs by how similar they sound, without being given the right answers. Contrast with supervised learning."], ["Rr", "Regression", "predictive", 4, 10, "Predicting a continuous number, such as a price, a demand level or a temperature."], ["Cl", "Classification", "predictive", 4, 11, "Assigning inputs to categories, such as spam or not spam, fraudulent or genuine."], ["Cu", "Clustering", "predictive", 4, 12, "Grouping similar items together when no one has said in advance what the groups should be, such as a shop sorting customers by what they tend to buy."], ["Dt", "Decision Tree", "predictive", 5, 8, "A model that makes predictions through a flowchart of yes/no questions about the data."], ["Rf", "Random Forest", "predictive", 5, 9, "Many decision trees combined, whose collective vote gives a more robust prediction than any single tree."], ["Gb", "Gradient Boosting", "predictive", 5, 10, "Building many small models one after another, each fixing the mistakes of the one before, so together they make good predictions from tables of data."], ["Fe", "Feature Engineering", "predictive", 5, 11, "Selecting and transforming raw data into inputs (features) that help a model predict well."], ["Of", "Overfitting", "predictive", 5, 12, "When a model memorises its training data so closely that it performs poorly on new, unseen data."], ["Fc", "Forecasting", "predictive", 6, 8, "Predicting future values — sales, demand, traffic — from historical patterns."], ["Tm", "Time Series", "predictive", 6, 9, "Data recorded at regular times, such as daily temperatures or weekly attendance, and the methods for spotting its trends and repeating patterns."], ["Ad", "Anomaly Detection", "predictive", 6, 10, "Spotting unusual data points or behaviour, such as fraud, equipment faults or security breaches."], ["Pa", "Predictive Analytics", "predictive", 6, 11, "Using historical data and statistical models to estimate what is likely to happen next."], ["Ps", "Prescriptive Analytics", "predictive", 6, 12, "Going beyond predicting what will happen to recommending the best action to take."], ["Rc", "Recommendation Engine", "predictive", 7, 8, "A system that suggests products, content or actions based on a person’s behaviour and preferences."], ["Ch", "Churn Prediction", "predictive", 7, 9, "Identifying which customers are likely to leave, so a business can act before they do."], ["Sa", "Sentiment Analysis", "predictive", 7, 10, "Detecting the emotional tone — positive, negative or neutral — in text such as reviews or social posts."], ["Np", "Natural Language Processing", "predictive", 7, 11, "Natural language processing (NLP) is the field of AI that builds systems to process, analyse and produce human language, such as translation apps, spellcheckers and voice assistants."], ["Cv", "Computer Vision", "predictive", 7, 12, "The field of AI that lets machines interpret images and video, from recognising faces to spotting defects on a production line."], ["Ge", "Generative Engine Optimisation", "predictive", 8, 8, "Writing and arranging web content so that AI chatbots and AI search answers are more likely to mention or link to it, like a business trying to appear first in Google results. Also called answer engine optimisation."], ["Ag", "AI Agent", "agents", 2, 13, "A system that uses an AI model to pursue a goal by deciding on and taking actions, not just answering questions."], ["Ac", "Agentic AI", "agents", 2, 14, "AI that can plan, use tools and carry out several steps of a job by itself, with a person checking in only now and then."], ["Au", "Autonomy", "agents", 2, 15, "How much an AI system can decide and do on its own before a human needs to step in."], ["Pl", "Planning", "agents", 3, 13, "An agent breaking a goal down into ordered steps and deciding what to do next."], ["Me", "Memory", "agents", 3, 14, "How an AI tool stores information to use later, either during one task (short-term) or between separate conversations (long-term), such as a chatbot saving your name."], ["Fn", "Function Calling", "agents", 3, 15, "A way for an AI model to ask other software, such as a calculator, a search engine or a booking system, to do a job; the app around the model runs the request. Also called tool use."], ["Ra", "ReAct", "agents", 4, 13, "A pattern where an agent alternates between reasoning about a problem and acting with tools (Reason + Act)."], ["Lp", "Agent Loop", "agents", 4, 14, "The cycle an AI agent repeats (look at the situation, choose an action, act, check the result) until the goal is met or a person stops it."], ["Sr", "Self-Reflection", "agents", 4, 15, "An agent reviewing and critiquing its own work, then correcting mistakes before it finishes."], ["Mc", "Model Context Protocol", "agents", 5, 13, "A shared set of rules (MCP) that lets AI assistants connect to other tools and data, such as a calendar or a folder of files, in the same way every time."], ["Aa", "Agent-to-Agent (A2A)", "agents", 5, 14, "Shared rules that let AI agents made by different companies find each other and work together on a task."], ["Or", "Orchestrator", "agents", 5, 15, "A part of an AI system that splits a big task into smaller jobs, hands them to other agents or tools, then puts their results together. Contrast with Workflow Orchestration, which plans a whole business process."], ["Ma", "Multi-Agent System", "agents", 6, 13, "Several specialised agents working together, each handling one part of a larger task."], ["Sw", "Agent Swarm", "agents", 6, 14, "A large group of simple agents coordinating to solve problems collectively, inspired by swarms in nature."], ["Rl", "Reinforcement Learning", "agents", 6, 15, "A way of training a program by trial and error: it gets a reward score for good actions and is adjusted to get more rewards. Chatbots are partly tuned this way, using people’s ratings of their answers."], ["Co", "Computer Use", "agents", 7, 13, "An AI agent that controls a computer by taking screenshots, moving the cursor and typing, so it can use ordinary apps the way a person would."], ["Br", "Browser Agent", "agents", 7, 14, "An agent that navigates websites, fills in forms and completes online tasks on your behalf."], ["Ca", "Coding Agent", "agents", 7, 15, "An AI agent that writes, tests and fixes code across a whole project, with a programmer setting the task and checking the changes before they are used."], ["Rp", "Robotic Process Automation", "automation", 2, 16, "Software ‘bots’ that copy the clicks and typing a person would do, to repeat the same fixed steps, such as copying data from emails into a spreadsheet (RPA)."], ["Ia", "Intelligent Automation", "automation", 2, 17, "Combining simple software bots with AI tools that can pull out information and pick between options, so computers can handle jobs that are not just fixed rules, like sorting emails by topic."], ["Hy", "Hyperautomation", "automation", 2, 18, "When an organisation tries to hand as many of its everyday tasks as possible to computers, using several kinds of software and AI together."], ["Wo", "Workflow Orchestration", "automation", 3, 16, "Planning and running the order of steps in a whole process, across different apps and people, such as getting a new pupil’s details from the form to the register. Contrast with Orchestrator."], ["Tg", "Trigger", "automation", 3, 17, "The event that starts an automation — a new email, a form submission, a scheduled time."], ["En", "Event-Driven Automation", "automation", 3, 18, "Automations that start as soon as something happens in another app, such as a new booking, instead of waiting for a set time. Triggers and webhooks are how this usually works."], ["Ap", "API Integration", "automation", 4, 16, "Connecting apps so they pass information and actions to each other automatically, through their APIs: the doors one program opens for another."], ["Wh", "Webhook", "automation", 4, 17, "A message one app sends to another the moment something happens — often used to kick off a workflow."], ["Lc", "Low-Code / No-Code", "automation", 4, 18, "Building apps and automations with visual, drag-and-drop tools and little or no hand-written code."], ["Id", "Intelligent Document Processing", "automation", 5, 16, "Using AI to read in documents such as forms, letters and invoices, sort them by type and pull out key details like names and dates (IDP)."], ["Oc", "Optical Character Recognition", "automation", 5, 17, "Converting images of text, such as scans or photos, into machine-readable text (OCR)."], ["Mi", "Process Mining", "automation", 5, 18, "Using the records computers keep to see how work really gets done, where it slows down, and which steps could be automated."], ["Be", "Business Rules Engine", "automation", 6, 16, "Software that follows a list of ‘if this, then that’ rules written by people, so the same case always gets the same decision, such as ‘if a book is 7 days late, send a reminder’."], ["St", "Straight-Through Processing", "automation", 6, 17, "When a computer handles a whole job, such as a payment or an order, from start to finish without a person checking it."], ["Dw", "Digital Worker", "automation", 6, 18, "A marketing name for a software bot or AI agent set up to do a fixed set of tasks, described by its sellers as if it were a member of staff."], ["Cb", "Chatbot", "automation", 7, 16, "A program that people can chat with by typing or speaking, from simple scripted helpers to AI assistants that produce replies from patterns in text. If a chatbot ever encourages you to hurt yourself or keep secrets, stop and tell a trusted adult, or call Childline free on 0800 1111."], ["Va", "Virtual Assistant", "automation", 7, 17, "A voice or chat assistant, such as the one on a phone or smart speaker, that carries out tasks like setting reminders or searching. Contrast with Chatbot (mainly conversation) and Copilot (built into one app)."], ["Cp", "Copilot", "automation", 7, 18, "An AI assistant built into an app or workflow that works alongside you — suggesting and drafting rather than acting alone."], ["Rs", "Responsible AI", "governance", 10, 4, "Developing and using AI in ways that are safe, fair, transparent and accountable."], ["Et", "AI Ethics", "governance", 10, 5, "Thinking about what is right and wrong in how people build and use AI, from asking permission to use someone’s data to its effects on jobs and society. Contrast with Responsible AI, which puts these ideas into practice."], ["Bi", "Bias", "governance", 10, 6, "When an AI keeps treating some groups of people unfairly, often because the data it learned from was unbalanced."], ["Fa", "Fairness", "governance", 10, 7, "Making sure an AI system’s outcomes don’t unjustly favour or disadvantage particular people or groups."], ["Xa", "Explainability", "governance", 10, 8, "Ways of showing people why an AI system gave a particular answer or decision, such as which information mattered most (XAI, explainable AI). Contrast with Transparency and Mechanistic Interpretability."], ["Tn", "Transparency", "governance", 10, 9, "Being open about when AI is being used, how it works and what data it relies on."], ["An", "Alignment", "governance", 10, 10, "Research and testing that tries to make an AI system’s behaviour match what people intend and value, for example not taking shortcuts that meet the instruction but miss its point."], ["Gr", "Guardrails", "governance", 10, 11, "Rules and filters that keep an AI system’s inputs and outputs within safe, acceptable bounds."], ["Hi", "Human-in-the-Loop", "governance", 10, 12, "Keeping a person involved to review, approve or correct AI decisions before they take effect."], ["Rt", "Red Teaming", "governance", 10, 13, "Deliberately attacking or stress-testing an AI system to uncover vulnerabilities and harmful behaviour."], ["Sf", "AI Safety", "governance", 10, 14, "Research and practice aimed at preventing AI systems from causing accidental or deliberate harm."], ["Pv", "Privacy", "governance", 10, 15, "Keeping people's personal information safe and under their control, including data used to train or run AI. In the UK this is covered by the UK GDPR and Data Protection Act 2018, updated by the Data (Use and Access) Act 2025."], ["Dg", "Data Governance", "governance", 10, 16, "The policies that control how data is collected, stored, accessed and used across an organisation."], ["Re", "AI Regulation", "governance", 10, 17, "Laws and standards that govern AI — such as the EU AI Act, which sets rules according to a system’s level of risk."], ["Ip", "Copyright & IP", "governance", 10, 18, "Questions over who owns AI training data and AI-generated content, and how creators’ rights are protected. In the UK, creators’ work is protected by the Copyright, Designs and Patents Act 1988."], ["Aw", "AI Washing", "governance", 11, 4, "Exaggerating how much a product uses AI to ride the hype, such as labelling basic software “AI-powered”."], ["Sh", "Shadow AI", "governance", 11, 5, "Using AI tools at work or school that haven’t been approved, which can put private data at risk."], ["Hp", "Human Premium", "governance", 11, 6, "The extra value people place on work, art and services verified as made by humans."], ["Wm", "AI Watermarking", "governance", 11, 7, "Signals, often invisible, added to AI-generated images, audio, video or text so tools can later check where they came from. Watermarks can sometimes be removed, so they are not proof on their own."], ["So", "AI Sovereignty", "governance", 11, 8, "A country’s or organisation’s ability to build, run and control its own AI, data and computing power, rather than relying on other countries or companies."], ["Rv", "Reverse Engineering", "governance", 11, 9, "Taking a finished product, program or AI model apart to work out how it was made and how it works."], ["Mp", "Mechanistic Interpretability", "governance", 11, 10, "Looking inside an AI model, piece by piece, to find which parts of it store particular ideas and how they lead to its answers."], ["As", "Activation Steering", "governance", 11, 11, "Nudging a model’s internal signals while it responds, to strengthen or weaken a particular behaviour."], ["Mx", "Model Extraction", "governance", 11, 12, "Sending an AI system thousands of questions and using its answers to build a copy, without access to its files. It usually breaks the tool’s terms of use and may break the law."], ["Rd", "Refusal Direction", "governance", 11, 13, "A single pattern in a model’s internal numbers that researchers found is linked to it refusing unsafe requests. Removing this pattern can stop the model refusing, which is how abliteration works."], ["Ab", "Abliteration", "governance", 11, 14, "Editing an AI model to strip out its safety protections, so it no longer refuses harmful requests. Doing this does not make harmful or illegal content legal."], ["Uc", "Uncensored Model", "governance", 11, 15, "A downloadable AI model that people have altered, by retraining or by abliteration, so it no longer refuses harmful requests. Illegal content is still illegal, whichever tool makes it. Contrast with jailbreaking, which tricks an unchanged model."], ["Jb", "Jailbreaking", "governance", 11, 16, "Writing prompts designed to trick an AI into ignoring its safety rules, without changing the model itself. It usually breaks the tool’s terms of use."], ["Gp", "GPU", "infra", 12, 4, "Graphics Processing Unit: a chip first made for video games that can do thousands of calculations at the same time. That makes it the main chip used to train and run AI."], ["Tp", "TPU & Accelerators", "infra", 12, 5, "Computer chips built just for AI. They do AI’s maths faster and use less power than ordinary chips. Google’s TPU (Tensor Processing Unit) is one example."], ["Cd", "Cloud AI", "infra", 12, 6, "AI that runs on powerful computers in big data centres and is used over the internet, rather than on your own device. Most chatbots work this way."], ["Ed", "Edge AI", "infra", 12, 7, "Running AI directly on devices such as phones, cameras or sensors, rather than in the cloud."], ["Mo", "MLOps", "infra", 12, 8, "The work of keeping machine learning models working well once people are using them: updating, checking and fixing them."], ["Lo", "LLMOps", "infra", 12, 9, "The everyday work of running large language model tools well: keeping track of prompts, testing the answers, watching the costs and spotting harmful output."], ["Vd", "Vector Database", "infra", 12, 10, "A database that stores information as lists of numbers (embeddings), so it can quickly find things with a similar meaning. Many chatbots use one to look things up before they answer."], ["Ms", "Model Serving", "infra", 12, 11, "The computers and software that run a trained model and answer requests from many people at once."], ["Qz", "Quantisation", "infra", 12, 12, "Shrinking an AI model by storing its numbers with fewer digits, a bit like rounding 3.14159 to 3.1. The model gets smaller, faster and cheaper to run, but can become slightly less accurate."], ["Ds", "Distillation", "infra", 12, 13, "Training a smaller “student” model to mimic the behaviour of a larger “teacher” model."], ["Ow", "Open-Weight Model", "infra", 12, 14, "A model whose trained parameters are publicly released, so anyone can run, study or adapt it, usually under a licence that sets some rules. Sharing it openly helps research, but also lets people remove its safety features."], ["Sm", "Small Language Model", "infra", 12, 15, "A compact language model designed to run quickly and cheaply, often directly on a device."], ["Ev", "Evals", "infra", 12, 16, "Structured tests that measure a model’s accuracy, safety and behaviour on specific tasks."], ["Sl", "Scaling Laws", "infra", 12, 17, "The pattern researchers have seen that AI models tend to get better, in a predictable way, when they are made bigger and trained on more data with more computing power."], ["Dp", "Data Pipeline", "infra", 12, 18, "The automated flow that collects, cleans and prepares data for training and analysis."]];
+const FAM = {foundations:'Foundations',generative:'Generative AI',predictive:'Predictive & Analytical AI',agents:'Autonomous AI Agents',automation:'Automation & Workflow AI',governance:'Governance & Ethics',infra:'AI Infrastructure'};
+// Sample riddles for the mock: one per day, the answer is a word on the table.
+const DAYS = [
+  {day:7, sym:'Ha', riddle:'I answer with total confidence, quote books no library holds, and never once blush. Who am I?'},
+  {day:8, sym:'Tk', riddle:'Smaller than a word, bigger than a letter. Models read me, count me and charge by me. Who am I?'},
+  {day:9, sym:'Gp', riddle:'Built to paint dragons in video games, I now do millions of sums at once to train models. Who am I?'},
+  {day:10, sym:'Df', riddle:'I start with a screen of static and clean it, step by step, until a picture appears. Who am I?'}
+];
+let cur = DAYS[0], left = 3, tries = 0, over = false, won = false, tried = new Set();
+const $ = id => document.getElementById(id);
+const bySym = Object.fromEntries(EL.map(e => [e[0], e]));
+
+function buildGrid(){
+  const g = $('grid'); g.innerHTML = '';
+  const fams = {};
+  // Desktop: every tile at its own row and column. Phone: grouped by family, four across.
+  EL.forEach(e => { (fams[e[2]] = fams[e[2]] || []).push(e); });
+  Object.keys(FAM).forEach(f => {
+    if (!fams[f]) return;
+    const sec = document.createElement('section'); sec.className = 'fam f-' + f;
+    const lab = document.createElement('h3'); lab.className = 'fam-label'; lab.textContent = FAM[f];
+    const first = fams[f][0];
+    lab.style.gridRow = Math.max(1, first[3] - 1) === first[3] ? '' : '';
+    sec.appendChild(lab);
+    const tiles = document.createElement('div'); tiles.className = 'fam-tiles';
+    fams[f].forEach(e => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'tile f-' + e[2]; b.dataset.sym = e[0];
+      b.style.gridRow = e[3]; b.style.gridColumn = e[4];
+      b.setAttribute('aria-label', e[1] + ' (' + e[0] + ')');
+      b.innerHTML = '<span class="n">' + (EL.indexOf(e) + 1) + '</span><span class="s">' + e[0] + '</span><span class="nm">' + e[1] + '</span>';
+      b.addEventListener('click', () => openCard(e));
+      tiles.appendChild(b);
+    });
+    sec.appendChild(tiles); g.appendChild(sec);
+  });
+  // Desktop family labels: hide (the colours carry the families, as on the real table).
+  if (matchMedia('(min-width:761px)').matches) g.querySelectorAll('.fam-label').forEach(l => l.hidden = true);
+}
+
+function gifts(){
+  const html = [0,1,2].map(i => '<i class="gift' + (i >= left ? ' used' : '') + '"></i>').join('');
+  $('gifts').innerHTML = html; $('pin-gifts').innerHTML = html;
+}
+
+function setDay(d){
+  cur = d; left = 3; tries = 0; over = false; won = false; tried = new Set(); $('card-hint').hidden = true; $('card-hint-btn').textContent = 'Hint'; $('card-hint-btn').setAttribute('aria-expanded','false');
+  $('day-label').textContent = 'Day ' + d.day + ' of 25';
+  $('riddle').textContent = d.riddle; $('pin-riddle').textContent = d.riddle;
+  $('hint').textContent = 'Open a word’s card and press “Is Santa here?”'; $('hint').className = 'santa-card__hint'; $('pin-hint').textContent = '';
+  gifts();
+}
+
+function openCard(e){
+  // Opening a card is always free: the table works as normal. Only "Is Santa here?" uses a guess.
+  const ans = bySym[cur.sym];
+  $('c-top').className = 'c-top f-' + e[2];
+  $('c-n').textContent = EL.indexOf(e) + 1; $('c-sym').textContent = e[0]; $('c-name').textContent = e[1];
+  $('c-fam').textContent = FAM[e[2]]; $('c-def').textContent = e[5];
+  const isAns = e[0] === ans[0];
+  $('c-santa').hidden = !(over && isAns);
+  const hunt = $('c-hunt');
+  if (over) {
+    hunt.innerHTML = isAns ? (won ? foundPanel() : '<p class="c-msg">Santa was hiding here today. <small>A new riddle in <strong id="count"></strong>.</small></p>') : '';
+    wireFound(); countdown(); return show();
+  }
+  if (tried.has(e[0])) {
+    hunt.innerHTML = '<p class="c-msg">You checked here. <small>Santa isn’t in this card.</small></p>';
+    return show();
+  }
+  hunt.innerHTML = '<div class="c-ask"><button class="btn btn--main" type="button" id="ask">Is Santa here?</button>'
+    + '<span class="c-left">Guesses left <span class="gifts">' + $('gifts').innerHTML + '</span></span></div>';
+  $('ask').onclick = () => check(e);
+  show();
+}
+
+function check(e){
+  const ans = bySym[cur.sym], hunt = $('c-hunt');
+  tried.add(e[0]); tries++;
+  if (e[0] === ans[0]) {
+    over = true; won = true;
+    $('c-santa').hidden = false;
+    hunt.innerHTML = foundPanel(); wireFound();
+    $('hint').className = 'santa-card__hint warm'; $('hint').textContent = 'Found in ' + e[1] + '. A new riddle tomorrow.';
+    $('pin-hint').textContent = $('hint').textContent; $('streak').textContent = '5-day streak';
+    countdown(); return;
+  }
+  left--; gifts();
+  const warm = e[2] === ans[2];
+  const msg = warm ? 'Warm: he’s in ' + FAM[e[2]] + ', just not this card.' : 'Cold: he isn’t in ' + FAM[e[2]] + '.';
+  $('hint').className = 'santa-card__hint ' + (warm ? 'warm' : 'cold'); $('hint').textContent = msg; $('pin-hint').textContent = msg;
+  if (left === 0) {
+    over = true;
+    hunt.innerHTML = '<p class="c-msg">Not here. <small>That was your last guess. He was hiding in ' + ans[1] + ' (' + ans[0] + ').</small></p>'
+      + '<div class="btns" style="margin-top:.8rem"><button class="btn btn--main" type="button" id="reveal">Open ' + ans[1] + '</button></div>';
+    $('reveal').onclick = () => openCard(ans);
+  } else {
+    hunt.innerHTML = '<p class="c-msg">Not here. <small>' + msg + '</small></p><p class="c-left">Guesses left <span class="gifts">' + $('gifts').innerHTML + '</span></p><button class="btn" type="button" id="keep">Keep looking</button>';
+    $('keep').onclick = () => $('card').close();
+  }
+}
+
+function foundPanel(){
+  const marks = Array.from({length: tries}, (_, k) => k === tries - 1 ? '🎅' : '❌').join('');
+  const text = 'AI Advent · Find Santa · Day ' + cur.day + '\n' + marks + '  🔥 5\naiawarenessday.co.uk/santa';
+  const hat = '<svg viewBox="0 0 60 44" aria-hidden="true"><path d="M6 34C10 14 26 2 44 6c6 2 9 8 9 14-8-5-16-3-22 3z" fill="#fff"/><rect x="2" y="30" width="44" height="11" fill="#fff" opacity=".85"/><circle cx="53" cy="22" r="6" fill="#fff"/></svg>';
+  const squares = [0, 1, 2].map(k => k < tries - 1 ? '<i class="sq sq--miss" title="Not here"></i>' : k === tries - 1 ? '<i class="sq sq--found" title="Found">' + hat + '</i>' : '<i class="sq sq--spare"></i>').join('');
+  return '<div class="c-found"><h3>You found Santa!</h3>'
+    + '<div class="share-card" id="share" data-text="' + text.replace(/"/g, '&quot;') + '">'
+    + '<p class="share-card__label">Find Santa · Day ' + cur.day + ' of 25</p>'
+    + '<div class="share-card__row"><span class="share-card__sq" role="img" aria-label="Found in ' + tries + ' of 3 guesses">' + squares + '</span>'
+    + '<span class="share-card__streak">5-day streak</span></div>'
+    + '<p class="share-card__result">Found in ' + tries + ' of 3 guesses</p>'
+    + '<p class="share-card__url">aiawarenessday.co.uk/santa</p></div>'
+    + '<div class="btns"><button class="btn btn--main" type="button" id="copy">Copy my result</button></div>'
+    + '<p class="next">A new riddle in <strong id="count"></strong>.</p></div>';
+}
+function wireFound(){
+  const c = $('copy'); if (c) c.onclick = () => { navigator.clipboard && navigator.clipboard.writeText($('share').dataset.text); c.textContent = 'Copied'; };
+}
+function show(){ if (!$('card').open) $('card').showModal(); }
+
+function countdown(){
+  if (!$('count')) return; const n = new Date(), m = new Date(n); m.setHours(24,0,0,0);
+  const s = Math.floor((m - n) / 1000);
+  $('count').textContent = String(Math.floor(s / 3600)).padStart(2,'0') + 'h ' + String(Math.floor(s % 3600 / 60)).padStart(2,'0') + 'm';
+}
+
+$('c-close').onclick = () => $('card').close();
+$('how-btn').onclick = () => { const h = $('how'), open = h.hidden; h.hidden = !open; $('how-btn').setAttribute('aria-expanded', String(open)); };
+$('to-class').onclick = () => { $('board-label').textContent = 'Find Santa · Day ' + cur.day + ' of 25'; $('board-q').textContent = cur.riddle; $('board-hint').hidden = true; $('board-hint-btn').textContent = 'Hint'; $('board-hint-btn').setAttribute('aria-expanded','false'); $('board').hidden = false; $('board-close').focus(); };
+$('card-hint-btn').onclick = () => {
+  const h = $('card-hint'), ans = bySym[cur.sym], open = h.hidden;
+  h.className = 'board__hint santa-card__famhint f-' + ans[2];
+  h.innerHTML = '<small>Hint</small> Santa is in ' + FAM[ans[2]];
+  h.hidden = !open; $('card-hint-btn').textContent = open ? 'Hide hint' : 'Hint'; $('card-hint-btn').setAttribute('aria-expanded', String(open));
+};
+$('board-hint-btn').onclick = () => {
+  const h = $('board-hint'), ans = bySym[cur.sym], open = h.hidden;
+  h.className = 'board__hint f-' + ans[2];
+  h.innerHTML = '<small>Hint</small> Santa is in ' + FAM[ans[2]];
+  h.hidden = !open; $('board-hint-btn').textContent = open ? 'Hide hint' : 'Hint'; $('board-hint-btn').setAttribute('aria-expanded', String(open));
+};
+$('board-close').onclick = () => { $('board').hidden = true; $('to-class').focus(); };
+$('reset').onclick = () => setDay(cur);
+DAYS.forEach((d, i) => { const o = document.createElement('option'); o.value = i; o.textContent = 'Day ' + d.day; $('pick').appendChild(o); });
+$('pick').onchange = ev => setDay(DAYS[ev.target.value]);
+
+// Decorations: a string of lights sized to the card, and snowflakes that fall the card's height.
+(function decorate(){
+  const card = document.querySelector('.santa-card'), lights = $('santa-lights'), snow = $('santa-snow');
+  const colours = ['#D7263D', '#F3C44F', '#63DF93', '#00BEDD', '#FA83EB'];
+  function drawLights(){
+    const w = card.clientWidth, n = Math.max(8, Math.round(w / 46)), ns = 'http://www.w3.org/2000/svg';
+    lights.setAttribute('viewBox', '0 0 ' + w + ' 30'); lights.innerHTML = '';
+    let d = 'M0 4'; const pts = [];
+    for (let i = 0; i < n; i++) { const x0 = i * w / n, x1 = (i + 1) * w / n, mx = (x0 + x1) / 2; d += ' Q' + mx + ' 18 ' + x1 + ' 4'; pts.push([mx, 11]); }
+    const wire = document.createElementNS(ns, 'path'); wire.setAttribute('d', d); wire.setAttribute('fill', 'none'); wire.setAttribute('stroke', '#5b5552'); wire.setAttribute('stroke-width', '1.5'); lights.appendChild(wire);
+    pts.forEach(([x, y], i) => {
+      const g = document.createElementNS(ns, 'g'); g.setAttribute('class', 'bulb'); g.style.animationDelay = (i % 5) * 0.45 + 's';
+      g.innerHTML = '<rect x="' + (x - 2.5) + '" y="' + (y - 1) + '" width="5" height="4" fill="#8a8480"/><ellipse cx="' + x + '" cy="' + (y + 8) + '" rx="4.2" ry="6" fill="' + colours[i % colours.length] + '"/>';
+      lights.appendChild(g);
+    });
+  }
+  function makeSnow(){
+    snow.innerHTML = ''; const h = card.clientHeight + 16;
+    for (let i = 0; i < 34; i++) {
+      const f = document.createElement('i'), s = 2 + Math.random() * 4;
+      f.style.cssText = 'left:' + (Math.random() * 100) + '%;--s:' + s + 'px;--o:' + (0.35 + Math.random() * 0.5).toFixed(2) + ';--d:' + (7 + Math.random() * 8).toFixed(1) + 's;--delay:-' + (Math.random() * 14).toFixed(1) + 's;--x:' + (Math.random() * 40 - 20).toFixed(0) + 'px;--fall:' + h + 'px;--y:' + (Math.random() * 100) + '%';
+      snow.appendChild(f);
+    }
+  }
+  drawLights(); makeSnow();
+  new ResizeObserver(() => { drawLights(); snow.querySelectorAll('i').forEach(f => f.style.setProperty('--fall', (card.clientHeight + 16) + 'px')); }).observe(card);
+})();
+buildGrid(); setDay(DAYS[0]); countdown(); setInterval(countdown, 30000);
+</script>
+</body>
+</html>

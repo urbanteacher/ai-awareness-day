@@ -5174,17 +5174,90 @@ html.alpt-board-open {
     font-size: 1.2rem;
   }
 
+  /* The number sits on the symbol's row, after it at the top, to save a row of height. */
+  .alpt-board__inner > .alpt-board__tile:not(.has-pic) {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "sym n" "name name" "label label";
+    align-content: start;
+    column-gap: 0.6rem;
+  }
+
+  .alpt-board__inner > .alpt-board__tile:not(.has-pic) .alpt-board__n { grid-area: n; align-self: start; padding-top: 0.35rem; }
+  .alpt-board__inner > .alpt-board__tile:not(.has-pic) .alpt-board__sym { grid-area: sym; }
+  .alpt-board__inner > .alpt-board__tile:not(.has-pic) .alpt-board__tile-name { grid-area: name; }
+  .alpt-board__inner > .alpt-board__tile:not(.has-pic) .alpt-board__tile-label { grid-area: label; }
+
   .alpt-board__inner > .alpt-board__tile:not(.has-pic) .alpt-board__sym {
-    font-size: clamp(3.5rem, 24vw, 7rem);
+    font-size: clamp(2.75rem, 16vw, 4.5rem);
     line-height: 1;
   }
 
+  /* The name is the tile's headline on a phone: twice its old size, breaking a long word (Superintelligence)
+     rather than running off the side. */
   .alpt-board__inner > .alpt-board__tile:not(.has-pic) .alpt-board__tile-name {
-    font-size: 1.35rem;
+    font-size: 2.7rem;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
   }
 
   .alpt-board__tile.has-pic .alpt-board__pic {
     inset: calc(3.5rem + env(safe-area-inset-top, 0px)) 0 0.5rem;
+  }
+
+  /* With the picture, the name heads the tile, level with Close, and the picture takes the rest; the words below
+     drop the repeated name (screen readers still hear it there). */
+  .alpt-board__inner > .alpt-board__tile.has-pic {
+    display: flex;
+    flex-direction: column;
+    padding-top: calc(0.75rem + env(safe-area-inset-top, 0px));
+  }
+
+  .alpt-board__inner > .alpt-board__tile.has-pic > .alpt-board__n,
+  .alpt-board__inner > .alpt-board__tile.has-pic > .alpt-board__sym,
+  .alpt-board__inner > .alpt-board__tile.has-pic > .alpt-board__tile-label {
+    display: none;
+  }
+
+  .alpt-board__inner > .alpt-board__tile.has-pic > .alpt-board__tile-name {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    margin-right: 3.25rem;
+    visibility: visible;
+    font-size: 1.7rem;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+
+  .alpt-board__inner > .alpt-board__tile.has-pic .alpt-board__pic {
+    position: relative;
+    inset: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    margin-top: 0.5rem;
+  }
+
+  /* The drawing fills whatever height is left, rather than setting the height itself. */
+  .alpt-board__inner > .alpt-board__tile.has-pic .alpt-board__pic svg {
+    position: absolute;
+    inset: 0;
+  }
+
+  .alpt-board__inner:has(> .alpt-board__tile.has-pic) .alpt-board__title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 
   /* The family and theme sit in the tile, under the name, and leave the words (visually: screen readers still
@@ -5282,13 +5355,46 @@ html.alpt-board-open {
   .alpt-board__bar:has(.alpt-board__btn--sym):not(:has(.alpt-board__btn--prev)) .alpt-board__btn--toggle { grid-area: 1 / 1 / 2 / 4; }
   .alpt-board__bar:not(:has(.alpt-board__btn--prev)) .alpt-board__btn--sym { grid-area: 1 / 4 / 2 / 7; }
 
+  /* Close is an ✕ on a phone, leaving the top row to the word's name. Its word stays as its accessible name. */
   .alpt-board .alpt-board__btn--close {
     position: fixed;
     top: calc(0.75rem + env(safe-area-inset-top, 0px));
     right: 0.75rem;
     z-index: 2;
+    width: 44px;
     min-width: 44px;
-    padding: 0.5rem 0.85rem;
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(35, 31, 32, 0.1);
+    color: var(--a27-ink, #231F20);
+    font-size: 0;
+  }
+
+  .alpt-board .alpt-board__btn--close:hover,
+  .alpt-board .alpt-board__btn--close:active {
+    background: rgba(35, 31, 32, 0.18);
+    color: var(--a27-ink, #231F20);
+  }
+
+  .alpt-board .alpt-board__btn--close:focus-visible {
+    outline: 3px solid var(--a27-ink, #231F20);
+    outline-offset: 2px;
+  }
+
+  .alpt-board .alpt-board__btn--close::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    transform: translate(-50%, -50%);
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 5l14 14M19 5L5 19' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 5l14 14M19 5L5 19' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
   }
 }
 
@@ -6847,4 +6953,638 @@ html.alpt-flow-open {
   /* A compound with its Tags button: row 2 is Show pictures · Debate it · download, row 3 ▶ How it works. */
   .alpt-board .alpt-board__bar:has(.alpt-board__btn--sym):has(.alpt-board__btn--talk) .alpt-board__btn--pic { grid-area: 2 / 1 / 3 / 4; }
   .alpt-board .alpt-board__bar:has(.alpt-board__btn--sym):has(.alpt-board__btn--talk) .alpt-board__btn--flow { grid-area: 3 / 1 / 4 / 7; }
+}
+
+/* ==========================================================================
+   Find Santa (1 to 25 December, modules/literacy-table/santa.php and assets/js/literacy-santa.js)
+
+   The word of the week card's pattern (ink, hard shadow, tilted sticker and tile) in Christmas red, with lights,
+   falling snow and holly behind its words. The riddle is the card's main feature, in a solid red frame. In each word's
+   card, "Is Santa here?" uses one of three guesses; the right word's card shows Santa.
+   ========================================================================== */
+
+.alpt-santa {
+  --santa: #D7263D;
+  --santa-deep: #B3172C;
+  --santa-text: #FF8F9C;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.9rem 1.1rem;
+  margin: 1.75rem 0.5rem 0.5rem 0;
+  padding: 2.1rem 1.4rem 1.25rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  box-shadow: 8px 8px 0 var(--santa);
+}
+
+.alpt-santa[hidden],
+.alpt-eotw[hidden] {
+  display: none !important;
+}
+
+.alpt-santa p {
+  margin: 0 !important;
+}
+
+.alpt-santa__deco {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.alpt-santa > :not(.alpt-santa__deco):not(.alpt-santa__sticker):not(script) {
+  position: relative;
+  z-index: 1;
+}
+
+.alpt-santa__lights {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  overflow: visible;
+}
+
+.alpt-santa__lights .bulb {
+  animation: alpt-santa-twinkle 2.4s ease-in-out infinite;
+}
+
+@keyframes alpt-santa-twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.alpt-santa__snow i {
+  position: absolute;
+  top: -8px;
+  width: var(--s);
+  height: var(--s);
+  border-radius: 50%;
+  background: #FFFFFF;
+  opacity: var(--o);
+  animation: alpt-santa-fall var(--d) linear var(--delay) infinite;
+}
+
+@keyframes alpt-santa-fall {
+  from { transform: translate(0, 0); }
+  to { transform: translate(var(--x), var(--fall, 360px)); }
+}
+
+.alpt-santa__holly {
+  position: absolute;
+  right: -6px;
+  bottom: -8px;
+  width: 96px;
+}
+
+.alpt-santa__sticker {
+  position: absolute;
+  z-index: 2;
+  top: -0.85rem;
+  right: 1.1rem;
+  padding: 0.3rem 0.65rem;
+  background: var(--santa);
+  color: #FFFFFF;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(3deg);
+}
+
+.alpt-santa__tile {
+  --cut: 14px;
+  display: flex;
+  align-items: flex-end;
+  width: 3.6rem;
+  height: 3.6rem;
+  padding: 0.35rem 0.45rem;
+  background: #FFE1E7;
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+  transform: rotate(-4deg);
+}
+
+.alpt-santa__q {
+  color: #BE123C;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.alpt-santa__hat {
+  position: absolute;
+  top: -2px;
+  right: 3px;
+  width: 34px;
+  transform: rotate(14deg);
+}
+
+.alpt-santa__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.9rem;
+}
+
+.alpt-santa__name {
+  margin: 0 !important;
+  color: var(--a27-cream);
+  font-size: clamp(1.2rem, 1.7vw, 1.45rem);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.alpt-santa__label {
+  color: var(--santa-text);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.alpt-santa__label span + span:not(:empty)::before {
+  content: " · ";
+}
+
+/* The riddle: the card's main feature, on ink so the snow passes behind it. */
+.alpt-santa__riddle {
+  grid-column: 1 / -1;
+  padding: 1rem 1.2rem;
+  border: 3px solid var(--santa);
+  background: var(--a27-ink);
+  font-size: clamp(1.3rem, 2.1vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.alpt-santa__status {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.alpt-santa__guesses {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.alpt-santa__meta {
+  color: #CFCAC0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.alpt-santa__marks,
+.alpt-santa-check__marks {
+  display: inline-flex;
+  gap: 0.3rem;
+}
+
+.alpt-santa-mark {
+  width: 14px;
+  height: 14px;
+  background: var(--santa-text, #FF8F9C);
+  clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 0 100%);
+}
+
+.alpt-santa-mark.is-used {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px #6B6662;
+}
+
+.alpt-santa__hint {
+  color: #E7E3DA;
+  font-size: 0.95rem;
+}
+
+.alpt-santa__hint.is-warm {
+  color: #FFB36B;
+}
+
+.alpt-santa__hint.is-cold {
+  color: var(--a27-safe);
+}
+
+.alpt-santa__fam,
+.alpt-santa-board__fam {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.45rem 0.8rem;
+  background: var(--fam);
+  color: var(--a27-ink);
+  font-weight: 700;
+}
+
+.alpt-santa__fam {
+  grid-column: 1 / -1;
+}
+
+.alpt-santa__fam[hidden],
+.alpt-santa-board__fam[hidden] {
+  display: none;
+}
+
+.alpt-santa__fam small,
+.alpt-santa-board__fam small {
+  color: var(--fam-deep);
+  font-size: 0.65em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.alpt-santa__how {
+  grid-column: 1 / -1;
+  color: #E7E3DA;
+  font-size: 0.92rem;
+}
+
+.alpt-santa__how[hidden] {
+  display: none;
+}
+
+.alpt-santa__actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.alpt-santa .alpt-btn {
+  min-height: 2.4rem;
+  padding: 0.4rem 0.9rem;
+  border-color: var(--a27-cream);
+  background: transparent;
+  color: var(--a27-cream);
+  font-size: 0.9rem;
+}
+
+.alpt-santa .alpt-btn--santa {
+  border-color: var(--santa);
+  background: var(--santa);
+  color: #FFFFFF;
+}
+
+.alpt-santa .alpt-btn:hover,
+.alpt-santa .alpt-btn[aria-expanded="true"] {
+  border-color: var(--a27-cream);
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+.alpt-santa .alpt-btn:focus-visible {
+  outline: 3px solid var(--santa-text);
+  outline-offset: 3px;
+}
+
+/* Beside the title on wide screens, in the word of the week's place. */
+@media (min-width: 1100px) {
+  .literacy-table-page .alpt-hero .container > .alpt-santa {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    align-self: start;
+    margin: var(--alpt-title-gap, 1.5rem) 8px 8px 0;
+    padding: 2.2rem 2rem 1.5rem;
+  }
+}
+
+/* ---- In a word's card: "Is Santa here?" ---- */
+.alpt-santa-check {
+  margin: 1rem 0 0;
+  padding: 1rem 0 0;
+  border-top: 2px dashed #D8D2C4;
+}
+
+.alpt-santa-check[hidden] {
+  display: none;
+}
+
+.alpt-santa-check p {
+  margin: 0;
+}
+
+.alpt-santa-check__riddle {
+  margin-bottom: 0.7rem !important;
+  color: var(--a27-dim);
+  font-size: 0.92rem;
+}
+
+.alpt-santa-check__riddle b {
+  color: #B3172C;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.alpt-santa-check__ask {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem 1.2rem;
+}
+
+.alpt-santa-check .alpt-btn--santa {
+  border-color: #D7263D;
+  background: #D7263D;
+  color: #FFFFFF;
+}
+
+.alpt-santa-check .alpt-btn--santa:hover {
+  border-color: var(--a27-ink);
+  background: var(--a27-ink);
+}
+
+.alpt-santa-check__left {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--a27-dim);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.alpt-santa-check .alpt-santa-mark {
+  background: var(--a27-ink);
+}
+
+.alpt-santa-check .alpt-santa-mark.is-used {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px #9B958D;
+}
+
+.alpt-santa-check__msg {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.alpt-santa-check__msg small {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--a27-dim);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.alpt-santa-check__msg + .alpt-santa-check__left,
+.alpt-santa-check__msg + .alpt-btn {
+  margin-top: 0.7rem;
+}
+
+.alpt-santa-check__left + .alpt-btn {
+  margin-top: 0.7rem;
+}
+
+.alpt-santa-found {
+  padding: 1rem 1.1rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  box-shadow: 6px 6px 0 #D7263D;
+}
+
+.alpt-santa-found h3 {
+  margin: 0;
+  color: var(--a27-cream);
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+}
+
+.alpt-santa-found__next {
+  margin-top: 0.7rem !important;
+  color: #CFCAC0;
+  font-size: 0.9rem;
+}
+
+/* The result, as a small card in the table's style. */
+.alpt-santa-share {
+  margin: 0.8rem 0 1rem;
+  padding: 0.9rem 1rem 0.85rem;
+  border-left: 6px solid #D7263D;
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+}
+
+.alpt-santa-share__label {
+  color: #B3172C;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.alpt-santa-share__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0.6rem 0 0.5rem;
+}
+
+.alpt-santa-share__sq {
+  display: inline-flex;
+  gap: 0.4rem;
+}
+
+.alpt-santa-sq {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%);
+}
+
+.alpt-santa-sq--miss {
+  background: #E7E2D6;
+}
+
+.alpt-santa-sq--miss::before,
+.alpt-santa-sq--miss::after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 2.4px;
+  border-radius: 2px;
+  background: #6B6662;
+  transform: rotate(45deg);
+}
+
+.alpt-santa-sq--miss::after {
+  transform: rotate(-45deg);
+}
+
+.alpt-santa-sq--found {
+  background: #D7263D;
+}
+
+.alpt-santa-sq--found svg {
+  width: 22px;
+}
+
+.alpt-santa-sq--spare {
+  box-shadow: inset 0 0 0 1.5px #C9C2B4;
+}
+
+.alpt-santa-share__streak {
+  color: var(--a27-dim);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.alpt-santa-share__result {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.alpt-santa-share__url {
+  margin-top: 0.15rem !important;
+  color: var(--a27-dim);
+  font-size: 0.85rem;
+}
+
+.alpt-santa-found .alpt-btn--santa {
+  border-color: #D7263D;
+  background: #D7263D;
+  color: #FFFFFF;
+}
+
+/* Santa himself, in the right word's card. */
+.alpt-panel__santa {
+  position: absolute;
+  z-index: 2;
+  top: 0.4rem;
+  right: 0.4rem;
+  width: clamp(84px, 30%, 130px);
+  filter: drop-shadow(0 4px 8px rgba(35, 31, 32, 0.25));
+  pointer-events: none;
+}
+
+.alpt-panel__santa[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .alpt-panel__santa:not([hidden]) {
+    animation: alpt-santa-rise 0.6s cubic-bezier(0.3, 1.5, 0.6, 1);
+  }
+}
+
+@keyframes alpt-santa-rise {
+  from { opacity: 0; transform: translateY(40px) scale(0.6); }
+}
+
+/* ---- Show to class: the riddle alone on the board ---- */
+.alpt-santa-board {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6vh 8vw 7rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.alpt-santa-board[hidden] {
+  display: none;
+}
+
+.alpt-santa-board p {
+  margin: 0;
+}
+
+.alpt-santa-board__label {
+  color: #FF8F9C;
+  font-size: clamp(0.9rem, 1.4vw, 1.3rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.alpt-santa-board__q {
+  max-width: 26ch;
+  margin-top: 1.2rem !important;
+  font-size: clamp(2rem, 4.8vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.alpt-santa-board__fam {
+  align-self: flex-start;
+  margin-top: 1.6rem !important;
+  font-size: clamp(1.1rem, 2vw, 2rem);
+}
+
+.alpt-santa-board__bar {
+  position: absolute;
+  right: 0;
+  bottom: 1.5rem;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.alpt-santa-board .alpt-btn {
+  border-color: var(--a27-cream);
+  color: var(--a27-cream);
+  font-size: clamp(0.95rem, 1.3vw, 1.2rem);
+}
+
+.alpt-santa-board .alpt-btn--santa {
+  border-color: #D7263D;
+  background: #D7263D;
+  color: #FFFFFF;
+}
+
+.alpt-santa-board .alpt-btn:hover,
+.alpt-santa-board .alpt-btn[aria-expanded="true"] {
+  border-color: var(--a27-cream);
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alpt-santa__snow i {
+    top: var(--y);
+    animation: none;
+  }
+
+  .alpt-santa__lights .bulb {
+    animation: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .alpt-santa {
+    margin-right: 8px;
+    padding: 2rem 1.1rem 1.1rem;
+  }
+
+  .alpt-santa__riddle {
+    padding: 0.85rem 0.95rem;
+    font-size: 1.25rem;
+  }
+
+  .alpt-santa__holly {
+    width: 76px;
+  }
 }

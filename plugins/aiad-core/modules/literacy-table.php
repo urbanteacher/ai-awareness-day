@@ -19,4 +19,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'AIAD_CORE_MODULE_LITERACY_TABLE', __FILE__ );
 
 require_once __DIR__ . '/literacy-table/table.php';
+require_once __DIR__ . '/literacy-table/santa.php';
 require_once __DIR__ . '/literacy-table/admin.php';

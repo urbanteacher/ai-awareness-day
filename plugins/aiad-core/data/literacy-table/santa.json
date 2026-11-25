@@ -1,0 +1,33 @@
+{
+    "schema": "aiad.literacy-table/1",
+    "kind": "santa",
+    "about": "Find Santa: a riddle a day from 1 to 25 December, in place of the word of the week on the table's page. Each riddle describes one word on the table; Santa is hiding in that word's card. Riddles are written from the word's definition in elements.json, so check them against it when either changes. Like the word of the week, no answer is a safeguarding word. 'year' is the December they run in.",
+    "year": 2026,
+    "days": [
+        { "day": 1, "sym": "Va", "riddle": "Ask me out loud to set a timer for the mince pies or add tinsel to the shopping list, and I'll do it. I live in your phone or smart speaker. Who am I?" },
+        { "day": 2, "sym": "Tk", "riddle": "Smaller than a word, bigger than a letter. Language models read me and write me, one chunk at a time. Who am I?" },
+        { "day": 3, "sym": "Ha", "riddle": "I answer with total confidence and quote books no library holds, because I predict likely words instead of checking facts. Who am I?" },
+        { "day": 4, "sym": "Gp", "riddle": "I was made for video games, but I can do thousands of sums at once, so now I'm the chip that trains AI. Who am I?" },
+        { "day": 5, "sym": "Ts", "riddle": "Give me a Christmas story in writing and I'll read it aloud in a natural-sounding voice. Who am I?" },
+        { "day": 6, "sym": "Bi", "riddle": "Learn from lopsided data and I creep in, treating some groups of people unfairly again and again. Who am I?" },
+        { "day": 7, "sym": "Pr", "riddle": "Before a model writes a single word, it waits for me: your instruction or your question. Who am I?" },
+        { "day": 8, "sym": "Rc", "riddle": "Watched one Christmas film? I'll line up ten more, based on what you watched and clicked before. Who am I?" },
+        { "day": 9, "sym": "Tr", "riddle": "Feed a model data, check its answers, adjust its settings, repeat until it improves. I'm that whole process. Who am I?" },
+        { "day": 10, "sym": "Pv", "riddle": "I keep your personal details safe and under your control, even when AI wants to learn from them. UK law protects me. Who am I?" },
+        { "day": 11, "sym": "Ag", "riddle": "Don't just answer my question: give me a goal and I'll decide what to do and take the steps myself. Who am I?" },
+        { "day": 12, "sym": "Oc", "riddle": "Show me a photo of a handwritten letter to Santa and I'll turn it into text a computer can search. Who am I?" },
+        { "day": 13, "sym": "Df", "riddle": "I start with a picture of pure static and clean it up, step by step, until a new image appears. Who am I?" },
+        { "day": 14, "sym": "Hi", "riddle": "Before the AI's decision takes effect, a person checks it, approves it or puts it right. Who am I?" },
+        { "day": 15, "sym": "Sa", "riddle": "Read a thousand reviews of a Christmas toy and I'll tell you whether people sound pleased, cross or neither. Who am I?" },
+        { "day": 16, "sym": "Te", "riddle": "Turn me down and answers are focused and predictable; turn me up and they get varied and creative. I'm not the weather. Who am I?" },
+        { "day": 17, "sym": "Cv", "riddle": "I help machines make sense of pictures and video, from recognising faces to spotting a cracked bauble on a production line. Who am I?" },
+        { "day": 18, "sym": "Me", "riddle": "Tell a chatbot your name today and it greets you by name next week. I'm how it kept that. Who am I?" },
+        { "day": 19, "sym": "Gr", "riddle": "I'm the rules and filters that keep what goes into an AI, and what comes out, within safe bounds. Who am I?" },
+        { "day": 20, "sym": "Ed", "riddle": "I run AI right on your phone, camera or doorbell, instead of sending everything off to the cloud. Who am I?" },
+        { "day": 21, "sym": "Of", "riddle": "I memorised every answer in the practice papers, then fell apart when the real exam asked something new. Who am I?" },
+        { "day": 22, "sym": "Wm", "riddle": "I'm a signal, often invisible, hidden in AI-made pictures and audio so tools can check where they came from. I can sometimes be removed. Who am I?" },
+        { "day": 23, "sym": "Cw", "riddle": "I'm the most text a model can take into account at once, counted in tokens. Who am I?" },
+        { "day": 24, "sym": "Rl", "riddle": "Good move, have a reward; no reward for a bad one. I train by trial and error, and chatbots are partly tuned this way. Who am I?" },
+        { "day": 25, "sym": "Ai", "riddle": "Built and used by people, I do tasks we once thought only humans could do. Every word on this table is part of my story. Who am I?" }
+    ]
+}
