@@ -19,8 +19,6 @@ For one learner, AI is:
 
 They agree on principles: keep personal data out of unapproved tools, declare AI use, and keep a human responsible for checking. They split on practice: marking, detectors, which tools, and whether a student may refuse AI. Only one university says they can.
 
-And one policy that rules ChatGPT out for staff carries ChatGPT's copy-paste marks in its own reading list.
-
 Swipe for the comparison, and for six questions any head, governor or trust leader can put to their own policy this term. If you cannot answer one, that is the gap.
 
 Read the article: https://aiawarenessday.co.uk/timeline/england-ai-policy-schools-colleges-universities/
