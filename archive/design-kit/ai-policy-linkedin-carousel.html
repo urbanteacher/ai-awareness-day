@@ -1,0 +1,77 @@
+<!doctype html><html><head><meta charset="utf-8"><title>AI policy LinkedIn carousel</title>
+<!-- LinkedIn document post for the AI policy article (26 Nov 2026): 4 slides, 1080×1350. Cover (the #linkedin card with SWIPE),
+     the policy grid, the learner journey, and a closing slide pointing to the article. Rendered by render-ai-policy-carousel.mjs. -->
+<style>
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Semibold.woff2') format('woff2'); font-weight: 600; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Bold.woff2') format('woff2'); font-weight: 700; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #231F20; }
+.li { width: 1080px; height: 1350px; background: #231F20; color: #F6F4ED; font-family: 'AIAD Sans', Arial, sans-serif; padding: 92px 80px 70px; position: relative; overflow: hidden; }
+.li .glow { position: absolute; border-radius: 50%; filter: blur(90px); }
+.li .kick { display: flex; align-items: center; gap: 22px; font-size: 27px; font-weight: 600; letter-spacing: .14em; position: relative; }
+.li .kick i { display: inline-block; width: 22px; height: 22px; margin-right: 8px; }
+.li .tag { display: inline-block; background: #FA83EB; color: #231F20; font-size: 30px; font-weight: 700; letter-spacing: .06em; padding: 16px 28px; margin: 54px 0 34px; transform: rotate(-2deg); position: relative; }
+.li h1 { font-size: 104px; line-height: .98; letter-spacing: -.045em; font-weight: 700; position: relative; }
+.li .dek { font-size: 38px; line-height: 1.32; margin-top: 30px; max-width: 900px; position: relative; }
+.li .dek b { color: #FA83EB; }
+.li .lstairs { position: absolute; left: 80px; right: 80px; bottom: 150px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; align-items: end; }
+.li .lstep { background: #F6F4ED; color: #231F20; padding: 18px 16px 20px; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px)); }
+.li .lstep .age { display: inline-block; font-size: 26px; font-weight: 700; padding: 6px 14px; border-radius: 999px; margin-bottom: 12px; }
+.li .lstep .where { font-size: 18px; font-weight: 600; color: #54504E; margin-bottom: 8px; line-height: 1.2; }
+.li .lstep .what { font-size: 23px; font-weight: 700; line-height: 1.18; letter-spacing: -.01em; }
+.li .lfoot { position: absolute; left: 80px; right: 80px; bottom: 62px; display: flex; justify-content: space-between; align-items: baseline; font-size: 30px; font-weight: 700; }
+.li .lfoot u { text-underline-offset: 6px; } .li .lfoot span { font-weight: 600; letter-spacing: .1em; font-size: 27px; }
+.sl h2 { font-size: 72px; line-height: 1; letter-spacing: -.04em; font-weight: 700; margin-top: 46px; }
+.sl .d2 { font-size: 32px; line-height: 1.3; margin-top: 18px; opacity: .9; }
+.sl .im { position: absolute; left: 60px; right: 60px; top: 470px; bottom: 140px; display: flex; align-items: center; justify-content: center; }
+.sl .im img { max-width: 100%; max-height: 100%; }
+.li .url { display: inline-block; margin-top: 54px; background: #F6F4ED; color: #231F20; font-size: 40px; font-weight: 700; padding: 22px 30px; position: relative;
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px)); }
+.qs { list-style: none; counter-reset: q; margin-top: 34px; display: grid; gap: 14px; position: relative; }
+.qs li { counter-increment: q; display: flex; align-items: center; gap: 20px; font-size: 34px; font-weight: 600; line-height: 1.2; }
+.qs li::before { content: counter(q); flex: none; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-size: 26px; font-weight: 700; color: #231F20; }
+.qs li:nth-child(1)::before { background: #00BEDD } .qs li:nth-child(2)::before { background: #FF7038 } .qs li:nth-child(3)::before { background: #AC91FF }
+.qs li:nth-child(4)::before { background: #63DF93 } .qs li:nth-child(5)::before { background: #FA83EB } .qs li:nth-child(6)::before { background: #F6F4ED }
+.li .url { margin-top: 40px; font-size: 34px; }
+@page { size: 1080px 1350px; margin: 0 } section { page-break-after: always } section:last-child { page-break-after: auto }
+</style></head><body>
+<section id="s1" class="li">
+  <div class="glow" style="width:520px;height:520px;right:-180px;top:-160px;background:rgba(0,190,221,.22)"></div>
+  <div class="glow" style="width:560px;height:560px;left:-220px;bottom:-200px;background:rgba(250,131,235,.20)"></div>
+  <div class="kick"><span><i style="background:#00BEDD"></i><i style="background:#FF7038"></i><i style="background:#AC91FF"></i><i style="background:#63DF93"></i><i style="background:#FA83EB"></i></span>NEW ARTICLE</div>
+  <div class="tag">AI POLICY</div>
+  <h1>Same country.<br>Opposite AI rules.</h1>
+  <p class="dek">We read <b>10 AI policies</b>, from a Sheffield primary to three universities. What a learner may do depends on the building.</p>
+  <div class="lstairs" id="ls1"></div>
+  <div class="lfoot"><div>AI Awareness Day <u>2027</u></div><span>SWIPE →</span></div>
+</section>
+<section id="s2" class="li sl">
+  <div class="kick"><span><i style="background:#00BEDD"></i><i style="background:#FF7038"></i><i style="background:#AC91FF"></i><i style="background:#63DF93"></i><i style="background:#FA83EB"></i></span>THE PRINCIPLES MATCH. THE RULES DON’T</div>
+  <h2>Same principles.<br>Different rules.</h2><p class="d2">Marking, detectors, tools, and the right to say no.</p>
+  <div class="im"><img src="THEME/assets/images/articles/ai-policy/policy-grid.png" alt="Six policies compared on five questions"></div>
+  <div class="lfoot"><div>AI Awareness Day <u>2027</u></div><span>2 / 4</span></div>
+</section>
+<section id="s3" class="li sl">
+  <div class="kick"><span><i style="background:#00BEDD"></i><i style="background:#FF7038"></i><i style="background:#AC91FF"></i><i style="background:#63DF93"></i><i style="background:#FA83EB"></i></span>WHAT AI IS, DEPENDING ON THE BUILDING</div>
+  <h2>A tool at 10.<br>The default at 19.</h2><p class="d2">One learner moving through England’s education system.</p>
+  <div class="im"><img src="THEME/assets/images/articles/ai-policy/learner-journey.png" alt="What AI is from age 10 to 19"></div>
+  <div class="lfoot"><div>AI Awareness Day <u>2027</u></div><span>3 / 4</span></div>
+</section>
+<section id="s4" class="li">
+  <div class="glow" style="width:620px;height:620px;right:-200px;top:-180px;background:rgba(172,145,255,.24)"></div>
+  <div class="glow" style="width:560px;height:560px;left:-220px;bottom:-200px;background:rgba(0,190,221,.20)"></div>
+  <div class="kick"><span><i style="background:#00BEDD"></i><i style="background:#FF7038"></i><i style="background:#AC91FF"></i><i style="background:#63DF93"></i><i style="background:#FA83EB"></i></span>READ THE FULL ARTICLE</div>
+  <div class="tag" style="margin:44px 0 28px">6 QUESTIONS</div>
+  <h1 style="font-size:84px">Ask these of your own AI policy.</h1>
+  <ol class="qs"><li>Who held the pen?</li><li>Does it fit your pupils?</li><li>Have you decided, or inherited, the hard calls?</li><li>Is the review date real?</li><li>What happens when the platform goes down?</li><li>Does it reach beyond staff and pupils?</li></ol>
+  <p class="dek" style="font-size:32px;margin-top:26px">If you cannot answer one, that is the gap.</p>
+  <div class="url">Read the article: link in the post</div>
+  <div class="lfoot"><div>AI Awareness Day <u>2027</u></div><span>4 / 4</span></div>
+</section>
+<script>
+const STEPS = [['10','Primary school','A supervised tool, or teacher-led feedback','#00BEDD'],['15','Independent school','A privilege, granted task by task','#FF7038'],['15','State secondary','Not provided at school at all','#AC91FF'],['17','FE college','Chiefly a malpractice risk','#63DF93'],['19','University (Salford)','The default, and refusing it is a protected choice','#FA83EB']];
+document.getElementById('ls1').innerHTML = STEPS.map(([age, where, what, c], i) =>
+  `<div class="lstep" style="min-height:${250 + i * 46}px"><div class="age" style="background:${c}">Age ${age}</div><div class="where">${where}</div><div class="what">${what}</div></div>`).join('');
+</script>
+</body></html>

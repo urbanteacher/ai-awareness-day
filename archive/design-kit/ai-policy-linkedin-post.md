@@ -1,5 +1,7 @@
 LinkedIn post for "From primary to university, England's AI rules depend on where you study" (26 Nov 2026).
-Image: ai-policy-linkedin.png (1080×1350). Put the link in the first comment if you prefer, LinkedIn shows link posts less.
+Use as a document post: upload ai-policy-linkedin-carousel/ai-policy-linkedin-carousel.pdf (4 slides: cover, policy grid,
+learner journey, six questions) and title the document "Same country. Opposite AI rules." Links in a PDF are not clickable on
+LinkedIn, so the article link stays in the post text. Single-image fallback: ai-policy-linkedin.png.
 
 ---
 
@@ -19,7 +21,7 @@ They agree on principles: keep personal data out of unapproved tools, declare AI
 
 And one policy that rules ChatGPT out for staff carries ChatGPT's copy-paste marks in its own reading list.
 
-We close with six questions any head, governor or trust leader can put to their own policy this term. If you cannot answer one, that is the gap.
+Swipe for the comparison, and for six questions any head, governor or trust leader can put to their own policy this term. If you cannot answer one, that is the gap.
 
 Read the article: https://aiawarenessday.co.uk/timeline/england-ai-policy-schools-colleges-universities/
 
