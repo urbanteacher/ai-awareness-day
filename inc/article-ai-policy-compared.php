@@ -99,3 +99,38 @@ function aiad_migrate_article_ai_policy(): void {
 	update_option( 'aiad_article_ai_policy_added', '1' );
 }
 add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_ai_policy_added', 'aiad_migrate_article_ai_policy' ); }, 60 );
+
+/**
+ * One-time (26 Nov 2026): bring a post published before the Glenthorne reading-list figure was dropped into line with the
+ * article file. Removes that figure and its media item, and swaps in the reworded paragraph and borrowed-text line. Each
+ * swap only applies if the old text is still there, so later edits in the editor are left alone.
+ */
+function aiad_fix_article_ai_policy_residue(): void {
+	$post = get_page_by_path( 'england-ai-policy-schools-colleges-universities', OBJECT, 'timeline' );
+	if ( ! $post ) {
+		update_option( 'aiad_article_ai_policy_residue_fixed', '1' );
+		return;
+	}
+	$content = (string) $post->post_content;
+	$before  = $content;
+	$content = (string) preg_replace( '/\n?<!-- wp:image [^\n]*-->\n<figure[^\n]*reading-list-residue[^\n]*\n<!-- \/wp:image -->\n?/', "\n", $content );
+	$swaps   = array(
+		'<p>One detail stands out. The policy’s reading list contains links tagged “utm_source=chatgpt.com” and citation fragments such as “gov.uk+15gov.uk+15”, the marks left when references are copied from a ChatGPT answer. A policy that rules ChatGPT out for staff appears to have gathered some of its own references with it.</p>' =>
+			'<p>The policy also shows how quietly AI has entered routine work. Its reading list carries links tagged “utm_source=chatgpt.com” and citation fragments such as “gov.uk+15gov.uk+15”, the marks left when references are gathered from a ChatGPT answer. That is no failing of the author, and many staff now research this way. It is a reason for policies to say how staff may use AI for research and drafting, not only which tools are approved.</p>',
+		'as Ecclesall’s GCSE exam rules, Leicester’s outdated Bard and Glenthorne’s ChatGPT-tagged reading list show.' =>
+			'as Ecclesall’s GCSE exam rules and Leicester’s outdated Bard show.',
+	);
+	$content = str_replace( array_keys( $swaps ), array_values( $swaps ), $content );
+	if ( $content !== $before ) {
+		global $wpdb;
+		$wpdb->update( $wpdb->posts, array( 'post_content' => $content ), array( 'ID' => $post->ID ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		clean_post_cache( $post->ID );
+	}
+	foreach ( get_attached_media( 'image', $post->ID ) as $media ) {
+		if ( str_contains( (string) get_attached_file( $media->ID ), 'reading-list-residue' ) ) {
+			wp_delete_attachment( $media->ID, true );
+		}
+	}
+	update_option( 'aiad_article_ai_policy_residue_fixed', '1' );
+}
+add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_ai_policy_residue_fixed', 'aiad_fix_article_ai_policy_residue' ); }, 61 );

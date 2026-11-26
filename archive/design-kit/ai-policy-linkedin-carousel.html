@@ -33,7 +33,12 @@ body { background: #231F20; }
 .qs li::before { content: counter(q); flex: none; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-size: 26px; font-weight: 700; color: #231F20; }
 .qs li:nth-child(1)::before { background: #00BEDD } .qs li:nth-child(2)::before { background: #FF7038 } .qs li:nth-child(3)::before { background: #AC91FF }
 .qs li:nth-child(4)::before { background: #63DF93 } .qs li:nth-child(5)::before { background: #FA83EB } .qs li:nth-child(6)::before { background: #F6F4ED }
-.li .url { margin-top: 40px; font-size: 34px; }
+.li .url { margin-top: 56px; font-size: 34px; }
+.rk { list-style: none; margin-top: 54px; display: grid; gap: 36px; position: relative; }
+.rk li { display: flex; gap: 22px; align-items: flex-start; }
+.rk li i { flex: none; width: 18px; height: 74px; border-radius: 4px; margin-top: 4px; }
+.rk li b { display: block; font-size: 42px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 2px; }
+.rk li div { font-size: 31px; line-height: 1.3; color: #D9D5CC; }
 @page { size: 1080px 1350px; margin: 0 } section { page-break-after: always } section:last-child { page-break-after: auto }
 </style></head><body>
 <section id="s1" class="li">
@@ -58,6 +63,7 @@ body { background: #231F20; }
   <div class="im"><img src="THEME/assets/images/articles/ai-policy/learner-journey.png" alt="What AI is from age 10 to 19"></div>
   <div class="lfoot"><div>AI Awareness Day <u>2027</u></div><span>3 / 4</span></div>
 </section>
+<!-- #s4-v1 (six questions), replaced 26 Nov 2026 as too vague for LinkedIn:
 <section id="s4" class="li">
   <div class="glow" style="width:620px;height:620px;right:-200px;top:-180px;background:rgba(172,145,255,.24)"></div>
   <div class="glow" style="width:560px;height:560px;left:-220px;bottom:-200px;background:rgba(0,190,221,.20)"></div>
@@ -66,6 +72,22 @@ body { background: #231F20; }
   <h1 style="font-size:84px">Ask these of your own AI policy.</h1>
   <ol class="qs"><li>Who held the pen?</li><li>Does it fit your pupils?</li><li>Have you decided, or inherited, the hard calls?</li><li>Is the review date real?</li><li>What happens when the platform goes down?</li><li>Does it reach beyond staff and pupils?</li></ol>
   <p class="dek" style="font-size:32px;margin-top:26px">If you cannot answer one, that is the gap.</p>
+  <div class="url">Read the article: link in the post</div>
+  <div class="lfoot"><div>AI Awareness Day <u>2027</u></div><span>4 / 4</span></div>
+</section>
+-->
+<section id="s4" class="li">
+  <div class="glow" style="width:620px;height:620px;right:-200px;top:-180px;background:rgba(172,145,255,.24)"></div>
+  <div class="glow" style="width:560px;height:560px;left:-220px;bottom:-200px;background:rgba(0,190,221,.20)"></div>
+  <div class="kick"><span><i style="background:#00BEDD"></i><i style="background:#FF7038"></i><i style="background:#AC91FF"></i><i style="background:#63DF93"></i><i style="background:#FA83EB"></i></span>WHY IT MATTERS</div>
+  <div class="tag" style="margin:44px 0 28px">AI POLICY</div>
+  <h1 style="font-size:96px">The risks are real. The policy has to be too.</h1>
+  <ul class="rk">
+    <li><i style="background:#FA83EB"></i><div><b>Deepfakes</b>Fake images and voices of pupils and staff</div></li>
+    <li><i style="background:#FF7038"></i><div><b>Misinformation</b>Confident AI answers that are simply wrong</div></li>
+    <li><i style="background:#00BEDD"></i><div><b>Data and cyber attacks</b>Pupil data in the wrong tools, school systems as targets</div></li>
+    <li><i style="background:#63DF93"></i><div><b>Dependence</b>On one platform, and on AI to do the thinking</div></li>
+  </ul>
   <div class="url">Read the article: link in the post</div>
   <div class="lfoot"><div>AI Awareness Day <u>2027</u></div><span>4 / 4</span></div>
 </section>

@@ -1,6 +1,6 @@
 LinkedIn post for "From primary to university, England's AI rules depend on where you study" (26 Nov 2026).
 Use as a document post: upload ai-policy-linkedin-carousel/ai-policy-linkedin-carousel.pdf (4 slides: cover, policy grid,
-learner journey, six questions) and title the document "Same country. Opposite AI rules." Links in a PDF are not clickable on
+learner journey, why it matters) and title the document "Same country. Opposite AI rules." Links in a PDF are not clickable on
 LinkedIn, so the article link stays in the post text. Single-image fallback: ai-policy-linkedin.png.
 
 ---
@@ -19,7 +19,9 @@ For one learner, AI is:
 
 They agree on principles: keep personal data out of unapproved tools, declare AI use, and keep a human responsible for checking. They split on practice: marking, detectors, which tools, and whether a student may refuse AI. Only one university says they can.
 
-Swipe for the comparison, and for six questions any head, governor or trust leader can put to their own policy this term. If you cannot answer one, that is the gap.
+Deepfakes, misinformation, data breaches, cyber attacks on school systems, over-reliance on AI: the risks are real, and they don't stop at the school gate. A school's AI policy has to be written for the school that uses it.
+
+Swipe for the comparison.
 
 Read the article: https://aiawarenessday.co.uk/timeline/england-ai-policy-schools-colleges-universities/
 
