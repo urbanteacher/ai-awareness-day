@@ -82,8 +82,8 @@ class AIRB_Interest {
 				'roles'       => array( 'teacher', 'leader' ),
 			),
 			'policy_support' => array(
-				'label'       => __( 'AI policy support (DfE template & guidance)', 'ai-risk-benchmark' ),
-				'description' => __( 'Help adapting the official DfE AI policy template to your school.', 'ai-risk-benchmark' ),
+				'label'       => __( 'AI policy support (DfE guidance)', 'ai-risk-benchmark' ),
+				'description' => __( 'Help writing or updating your school’s AI policy in line with DfE guidance.', 'ai-risk-benchmark' ),
 				'roles'       => array( 'leader', 'teacher' ),
 			),
 			'whole_school_benchmark' => array(

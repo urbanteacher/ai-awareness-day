@@ -702,15 +702,15 @@ class AIRB_Hub_Content {
 				),
 			),
 			'ai-policy-generator'             => array(
-				'headline'            => __( 'School AI Policy: DfE Templates & Support', 'ai-risk-benchmark' ),
-				'subtitle'            => __( 'Adapt the Official DfE AI Policy Template to Your School', 'ai-risk-benchmark' ),
+				'headline'            => __( 'School AI Policy: Guidance & Support', 'ai-risk-benchmark' ),
+				'subtitle'            => __( 'Write or Update Your School’s AI Policy Using DfE Guidance', 'ai-risk-benchmark' ),
 				'why_heading'         => __( 'Why This Matters', 'ai-risk-benchmark' ),
 				'why_paragraphs'      => array(
 					__( 'Many schools understand that AI is becoming part of education but struggle to develop clear expectations for staff, pupils and parents.', 'ai-risk-benchmark' ),
 					__( 'An AI policy helps create consistency, reduce risk and communicate expectations.', 'ai-risk-benchmark' ),
 					__( 'There is no single policy that works for every school.', 'ai-risk-benchmark' ),
 					__( 'A primary school will have different requirements from a secondary school. A MAT may need a different approach from a standalone school.', 'ai-risk-benchmark' ),
-					__( 'The Department for Education publishes a free AI policy template that schools can adapt — there is no need to start from scratch. This page shows you how to tailor it to your context, and the AI Awareness Day team can support you through it.', 'ai-risk-benchmark' ),
+					__( 'There is no official DfE AI policy template, and no law requires a standalone AI policy. The DfE asks schools to update their existing safeguarding, online safety and behaviour policies for the risks of AI, and exam centres must cover AI misuse in their JCQ malpractice policy. This page shows you how to set out those expectations for your context, and the AI Awareness Day team can support you through it.', 'ai-risk-benchmark' ),
 				),
 				'post_sections'       => array(
 					array(
@@ -825,9 +825,9 @@ class AIRB_Hub_Content {
 						'heading' => __( 'Recommended Next Steps', 'ai-risk-benchmark' ),
 						'blocks'  => array(
 							array(
-								'body' => __( 'Download the official DfE AI policy template and adapt it using the sections above.', 'ai-risk-benchmark' ),
+								'body' => __( 'Read the DfE’s support materials for school leaders, then draft or update your policy using the sections above.', 'ai-risk-benchmark' ),
 								'link' => array(
-									'label' => __( 'DfE — Using AI in education settings (policy guidance & template)', 'ai-risk-benchmark' ),
+									'label' => __( 'DfE — Using AI in education settings (support materials for leaders)', 'ai-risk-benchmark' ),
 									'url'   => AIRB_Defaults::dfe_url_using_ai(),
 								),
 							),
@@ -1250,7 +1250,7 @@ class AIRB_Hub_Content {
 							array(
 								'body' => __( 'If Governance scores are low:', 'ai-risk-benchmark' ),
 								'link' => array(
-									'label' => __( 'School AI Policy: DfE templates & support', 'ai-risk-benchmark' ),
+									'label' => __( 'School AI Policy: guidance & support', 'ai-risk-benchmark' ),
 									'path'  => 'ai-policy-generator',
 								),
 							),
@@ -1830,7 +1830,7 @@ class AIRB_Hub_Content {
 				'steps'               => array(
 					array(
 						'title' => __( '0–25 — Emerging', 'ai-risk-benchmark' ),
-						'body'  => __( 'Ad hoc AI use; limited governance. Priorities: adapt the DfE AI policy template, DfE Compliance Checklist, leader benchmark.', 'ai-risk-benchmark' ),
+						'body'  => __( 'Ad hoc AI use; limited governance. Priorities: set out your AI policy using DfE guidance, DfE Compliance Checklist, leader benchmark.', 'ai-risk-benchmark' ),
 					),
 					array(
 						'title' => __( '26–50 — Developing', 'ai-risk-benchmark' ),

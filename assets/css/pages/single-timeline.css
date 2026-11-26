@@ -295,6 +295,37 @@
 	font-style: italic;
 }
 
+/* Tables in posts: scroll sideways inside the column on narrow screens. */
+.single-timeline-entry__content .wp-block-table {
+	margin: 1.5em 0;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.single-timeline-entry__content .wp-block-table table {
+	border-collapse: collapse;
+	width: 100%;
+	font-size: 0.875rem;
+	line-height: 1.4;
+}
+
+.single-timeline-entry__content .wp-block-table th,
+.single-timeline-entry__content .wp-block-table td {
+	padding: 0.6em 0.75em;
+	border: 1px solid var(--gray-200, #E5E2DA);
+	text-align: left;
+	vertical-align: top;
+}
+
+.single-timeline-entry__content .wp-block-table thead th {
+	background: var(--wp--preset--color--ink, #231F20);
+	color: var(--wp--preset--color--cream, #F6F4ED);
+	font-weight: 600;
+}
+
+
+
+
 /* Cap vertical-format embeds (YouTube Shorts, TikTok, Reels) in post content
    so a 9:16 video at full content width doesn't render ~1000px tall. */
 .single-timeline-entry__content .wp-block-embed.wp-embed-aspect-9-16,

@@ -25,7 +25,7 @@ class AIRB_Leader_Results {
 	 * @param string               $school           School name from submission.
 	 * @param array<string, string> $profile         School profile (phase, org_type).
 	 * @param array<string, mixed> $config           Plugin config.
-	 * @param array<string, mixed>|null $policy_support AI policy support offer (DfE template).
+	 * @param array<string, mixed>|null $policy_support AI policy support offer (DfE guidance).
 	 * @param array<string, mixed>|null $aad_promo   AI Awareness Day promo.
 	 * @param array<string, mixed>      $answers     Answer map.
 	 * @return array<string, mixed>
@@ -411,7 +411,7 @@ class AIRB_Leader_Results {
 	 * @param array<string, mixed>      $config      Config.
 	 * @param array<string, string>     $profile     Profile.
 	 * @param array<string, mixed>      $progress    School rollout.
-	 * @param array<string, mixed>|null $policy_support AI policy support offer (DfE template).
+	 * @param array<string, mixed>|null $policy_support AI policy support offer (DfE guidance).
 	 * @param array<string, mixed>|null $aad_promo   AAD offer.
 	 * @param array<string, mixed>      $cfg         Leader config.
 	 * @return array<string, mixed>

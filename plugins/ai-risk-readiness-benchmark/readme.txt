@@ -4,7 +4,7 @@ Tags: ai, risk, schools, dfe, benchmark, assessment
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.59.1
+Stable tag: 1.59.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 

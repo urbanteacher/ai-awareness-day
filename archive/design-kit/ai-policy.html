@@ -1,0 +1,224 @@
+<!doctype html>
+<!-- "From primary to university, England’s AI rules depend on where you study" (24 Nov 2026), the comparison of ten institutions' AI policies. #cover: text-free 750×500 cover,
+     no photos. Five policy sheets stepping up like the learner's journey (primary trust, state secondary, independent school, FE college,
+     university). Every sheet carries the same header rule lines in cream (same laws), but its body ends in a different verdict: a lock,
+     a cross, a dashed "ask your teacher" tick, a warning mark and an open tick. The site crops covers from 16:7 to 1:1 about the centre,
+     so the sheets sit inside x 125–625, y 86–414. Rendered by render-ai-policy.mjs. -->
+<html><head><meta charset="utf-8">
+<style>
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Semibold.woff2') format('woff2'); font-weight: 600; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Bold.woff2') format('woff2'); font-weight: 700; }
+:root { --cream:#F6F4ED; --ink:#231F20; --safe:#00BEDD; --smart:#FF7038; --creative:#AC91FF; --responsible:#63DF93; --future:#FA83EB; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #888; padding: 20px; width: 800px; display: grid; gap: 20px; }
+.cover { width: 750px; height: 500px; position: relative; overflow: hidden; background: linear-gradient(160deg, #231F20 0%, #2E2A2B 60%, #3A3536 100%); }
+.cover .glow { position: absolute; border-radius: 50%; filter: blur(60px); }
+.cover svg { position: absolute; inset: 0; width: 750px; height: 500px; z-index: 1; }
+.cover .sigs { position: absolute; left: 0; right: 0; bottom: 0; height: 8px; display: flex; z-index: 4; }
+.cover .sigs i { flex: 1; display: block; }
+.fig { width: 720px; padding: 26px 24px 20px; background: var(--cream); color: var(--ink); font-family: 'AIAD Sans', Arial, sans-serif;
+  clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 26px 100%, 0 calc(100% - 26px)); }
+.fig h2 { font-size: 28px; font-weight: 700; letter-spacing: -.03em; margin-bottom: 4px; }
+.fig .sub { font-size: 15px; color: #54504E; margin-bottom: 18px; }
+.fig .foot { margin-top: 14px; font-size: 12px; color: #54504E; }
+.g { display: grid; grid-template-columns: 138px repeat(6, 1fr); gap: 4px; }
+.g .ch { font-size: 13px; font-weight: 700; line-height: 1.15; padding: 0 4px 8px; align-self: end; text-align: center; }
+.g .ch small { display: block; font-size: 11px; font-weight: 400; color: #54504E; margin-top: 2px; }
+.g .rh { font-size: 14px; font-weight: 700; line-height: 1.2; display: flex; align-items: center; padding-right: 6px; }
+.g .c { background: #EAE7DF; min-height: 74px; padding: 8px 4px 7px; display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center;
+  font-size: 11.5px; font-weight: 600; line-height: 1.2; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); }
+.g .c.na { color: #8A8580; font-weight: 400; background: #F0EEE7; }
+.m { width: 26px; height: 26px; border-radius: 50%; display: inline-grid; place-items: center; flex: none; position: relative; }
+.m::after { content: ''; display: block; }
+.m.yes { background: #63DF93; } .m.yes::after { width: 11px; height: 6px; border: solid #231F20; border-width: 0 0 3px 3px; transform: translateY(-2px) rotate(-45deg); }
+.m.no { background: #231F20; } .m.no::after { content: '×'; color: #F6F4ED; font: 700 22px/1 Arial, sans-serif; margin-top: -2px; }
+.m.part { background: linear-gradient(90deg, #FF7038 50%, #F6F4ED 50%); box-shadow: inset 0 0 0 2.5px #FF7038; }
+.m.na { background: transparent; box-shadow: inset 0 0 0 2px #C9C6BE; } .m.na::after { width: 10px; height: 2.5px; background: #A9A49C; }
+.key { display: flex; gap: 18px; margin-top: 14px; font-size: 13px; font-weight: 600; }
+.key span { display: flex; align-items: center; gap: 6px; } .key .m { width: 20px; height: 20px; }
+.key .m.yes::after { width: 8px; height: 4px; border-width: 0 0 2.5px 2.5px; } .key .m.no::after { font-size: 17px; }
+.stairs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; align-items: end; }
+.step { background: #231F20; color: var(--cream); padding: 14px 12px 16px; min-height: 150px;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); }
+.step .age { display: inline-block; color: #231F20; font-size: 18px; font-weight: 700; padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+.step .where { font-size: 12.5px; font-weight: 600; opacity: .75; margin-bottom: 6px; line-height: 1.2; }
+.step .what { font-size: 16px; font-weight: 700; line-height: 1.22; letter-spacing: -.01em; }
+.sigs i:nth-child(1){background:var(--safe)} .sigs i:nth-child(2){background:var(--smart)} .sigs i:nth-child(3){background:var(--creative)} .sigs i:nth-child(4){background:var(--responsible)} .sigs i:nth-child(5){background:var(--future)}
+.doc { background: #fff; padding: 20px 22px 18px; font-size: 14.5px; line-height: 1.55; color: #231F20; box-shadow: 0 1px 0 #E0DCD2;
+  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%); }
+.doc .src { font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #8A8580; margin-bottom: 10px; }
+.doc h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.doc p { margin-bottom: 9px; } .doc p:last-child { margin-bottom: 0; } .doc .gap { color: #A9A49C; margin: 2px 0 9px; letter-spacing: .2em; }
+.doc .url { word-break: break-all; color: #2B5FA8; }
+.hl { padding: 1px 4px; border-radius: 3px; font-weight: 700; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.hl.a { background: #FFD3BF; box-shadow: inset 0 -3px 0 #FF7038; } .hl.b { background: #FDD3F6; box-shadow: inset 0 -3px 0 #FA83EB; }
+.pin { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #231F20; color: #F6F4ED;
+  font-size: 12.5px; font-weight: 700; vertical-align: 2px; margin-left: 5px; }
+.notes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.note { background: #231F20; color: #F6F4ED; padding: 14px 14px 15px; font-size: 13.5px; line-height: 1.4;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); }
+.note b.t { display: flex; align-items: center; gap: 8px; font-size: 15.5px; margin-bottom: 6px; }
+.note .pin { margin: 0; background: #F6F4ED; color: #231F20; vertical-align: 0; }
+.note .bar { display: block; width: 34px; height: 5px; border-radius: 3px; margin-bottom: 10px; }
+</style></head><body>
+<!-- #cover-v1-sheets: the first cover (five sheets, same header rules, different verdicts), kept as an alternate; archived render at
+     ai-policy-dropped/cover-v1-five-sheets.jpg. -->
+<section id="cover-v1-sheets" class="cover">
+  <div class="glow" style="width:360px;height:360px;left:-80px;top:-110px;background:rgba(0,190,221,.30)"></div>
+  <div class="glow" style="width:420px;height:420px;right:-120px;bottom:-160px;background:rgba(250,131,235,.28)"></div>
+  <div class="glow" style="width:300px;height:300px;left:240px;top:140px;background:rgba(172,145,255,.16)"></div>
+  <svg viewBox="0 0 750 500" id="art"></svg>
+  <div class="sigs"><i></i><i></i><i></i><i></i><i></i></div>
+</section>
+
+<!-- #cover: one AI policy, shown as a document (25 Nov 2026, replacing the five-sheet cover). Text-free apart from the "AI Policy"
+     heading on the sheet. A cream policy sheet with a clipped corner, an AI sparkle badge, five numbered clauses in the five pillar colours,
+     each ending in a rule mark (tick, half, cross), and a signature with a pink approval seal. Everything sits inside x 125–625, y 86–414. -->
+<section id="cover" class="cover">
+  <div class="glow" style="width:380px;height:380px;left:-90px;top:-120px;background:rgba(0,190,221,.32)"></div>
+  <div class="glow" style="width:440px;height:440px;right:-130px;bottom:-170px;background:rgba(250,131,235,.30)"></div>
+  <div class="glow" style="width:320px;height:320px;left:220px;top:120px;background:rgba(172,145,255,.18)"></div>
+  <svg viewBox="0 0 750 500" id="art2"></svg>
+  <div class="sigs"><i></i><i></i><i></i><i></i><i></i></div>
+</section>
+
+<!-- #grid: the comparison table at a glance, for the body above the full table (JAGS left out: its public text sets no rules; the six-column first version is ai-policy-dropped/policy-grid-v1-with-jags.png). 720 wide at 2×. Each cell: a mark (tick, half,
+     cross, dash) and a two- or three-word note, so the meaning never rests on colour alone. -->
+<section id="grid" class="fig">
+  <h2>Same laws, opposite rules</h2>
+  <p class="sub">Six of the ten policies, compared on five questions</p>
+  <div class="g" id="g"></div>
+  <div class="key"><span><b class="m yes"></b>Yes</span><span><b class="m part"></b>Partly</span><span><b class="m no"></b>No</span><span><b class="m na"></b>Not addressed</span></div>
+  <p class="foot">AI Awareness Day · Thursday 29 April 2027 · aiawarenessday.co.uk</p>
+</section>
+
+<!-- #journey: the article's "striking progression", one learner through five places, as a rising stair of cards. 720 wide at 2×. -->
+<section id="journey" class="fig">
+  <h2>One learner, five rulebooks</h2>
+  <p class="sub">What AI is, depending on where you study</p>
+  <div class="stairs" id="stairs"></div>
+  <p class="foot">AI Awareness Day · Thursday 29 April 2027 · aiawarenessday.co.uk</p>
+</section>
+
+<!-- #residue: Glenthorne's reading list, quoted as published (June 2025 policy, pages on further reading), with the ChatGPT copy-paste
+     marks highlighted: orange for citation-chip fragments, pink for the utm tag. Added 26 Nov 2026. 720 wide at 2×. -->
+<section id="residue" class="fig">
+  <h2>ChatGPT’s fingerprints</h2>
+  <p class="sub">Glenthorne’s AI policy, further reading section, as published</p>
+  <div class="doc">
+    <div class="src">Glenthorne High School · AI policy · June 2025</div>
+    <h3>Further reading and CPD resources</h3>
+    <p>Module 1 – Understanding AI in Education: … why it should be used alongside teacher expertise <span class="hl a">assets.publishing.service.gov.uk+15gov.uk+15gov.uk+15</span>.<span class="pin">1</span></p>
+    <p>Module 2 – Interacting with Generative AI: … with emphasis on verifying AI outputs <span class="hl a">gov.uk+1gov.uk+1</span>.<span class="pin">1</span></p>
+    <div class="gap">· · ·</div>
+    <p>DfE-commissioned Ofsted report … published at the end of June 2025:<br>
+    <span class="url">https://www.gov.uk/government/news/ai-in-education-how-schools-and-further-education-colleges-are-making-it-work</span><span class="hl b">?utm_source=chatgpt.com</span><span class="pin">2</span></p>
+  </div>
+  <div class="notes">
+    <div class="note"><span class="bar" style="background:#FF7038"></span><b class="t"><span class="pin">1</span>Source chips</b>ChatGPT shows its sources as small links, such as “gov.uk +15”. Copy the answer and they paste in as plain text.</div>
+    <div class="note"><span class="bar" style="background:#FA83EB"></span><b class="t"><span class="pin">2</span>Tracking tag</b>ChatGPT adds “utm_source=chatgpt.com” to the links it gives, telling the website where the visitor came from.</div>
+  </div>
+  <p class="foot">AI Awareness Day · Thursday 29 April 2027 · aiawarenessday.co.uk</p>
+</section>
+
+<script>
+const GRID = {
+  cols: ['St Paul’s Girls’', 'Glenthorne', 'Learning Academies', 'Ecclesall Primary', 'Leicester College', 'Salford'],
+  subs: ['independent', 'state secondary', 'primary trust', 'primary school', 'FE', 'university'],
+  rows: [
+    ['Learners may use AI by default', ['part', 'If the teacher allows'], ['no', 'No tools provided'], ['part', 'Research, not assessments'], ['part', 'In class, to experiment'], ['part', 'Not to write assessed work'], ['yes', 'Unless a ban is justified']],
+    ['Staff may mark with AI', ['no', 'Banned'], ['na', 'Not addressed'], ['na', 'Not addressed'], ['yes', 'Teacher checks every mark'], ['part', 'No AI feedback on summative work'], ['yes', 'If students are told']],
+    ['AI detectors count as evidence', ['no', 'Called unreliable'], ['part', '“If reliable”'], ['na', 'Not addressed'], ['part', 'Treated with caution'], ['yes', 'Turnitin'], ['no', 'Banned']],
+    ['Students may refuse AI', ['na', 'Not addressed'], ['na', 'Not addressed'], ['na', 'Not addressed'], ['na', 'Not addressed'], ['na', 'Not addressed'], ['yes', '“Without detriment”']],
+    ['Approved tools are listed', ['yes', 'Seven, by age'], ['yes', 'Copilot, OtterAI'], ['yes', 'Five tools'], ['no', 'Promised, not published'], ['part', 'Internal IT hub'], ['no', 'Not listed']],
+  ],
+};
+const g = document.getElementById('g');
+g.insertAdjacentHTML('beforeend', '<div></div>' + GRID.cols.map((c, i) => `<div class="ch">${c}<small>${GRID.subs[i]}</small></div>`).join(''));
+GRID.rows.forEach(([q, ...cells]) => {
+  g.insertAdjacentHTML('beforeend', `<div class="rh">${q}</div>` + cells.map(([m, t]) => `<div class="c ${m}"><b class="m ${m}"></b><span>${t}</span></div>`).join(''));
+});
+const STEPS = [
+  ['10', 'Primary school', 'A supervised tool, or teacher-led feedback', '#00BEDD'],
+  ['15', 'Independent school', 'A privilege, granted task by task', '#FF7038'],
+  ['15', 'State secondary', 'Not provided at school at all', '#AC91FF'],
+  ['17', 'FE college', 'Chiefly a malpractice risk', '#63DF93'],
+  ['19', 'University (Salford)', 'The default, and refusing it is a protected choice', '#FA83EB'],
+];
+document.getElementById('stairs').innerHTML = STEPS.map(([age, where, what, c], i) =>
+  `<div class="step" style="min-height:${190 + i * 30}px"><div class="age" style="background:${c}">Age ${age}</div><div class="where">${where}</div><div class="what">${what}</div></div>`).join('');
+
+// Five sheets, 88 wide, 12 apart, stepping up 34px each: x from 135 to 535, bottoms on y 404.
+const cols = ['#00BEDD', '#FF7038', '#AC91FF', '#63DF93', '#FA83EB'];
+const marks = ['lock', 'cross', 'ask', 'warn', 'tick'];
+const W = 88, GAP = 12, X0 = 135, BOTTOM = 404, NS = 'http://www.w3.org/2000/svg';
+const svg = document.getElementById('art');
+const el = (n, a, p = svg) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
+// a thin cream thread linking the identical header rules across all five sheets: the same laws
+cols.forEach((c, i) => {
+  const x = X0 + i * (W + GAP), h = 200 + i * 34, y = BOTTOM - h;
+  const g = el('g', {});
+  el('path', { d: `M${x} ${y} h${W - 18} l18 18 V${y + h} H${x + 14} l-14 -14 Z`, fill: '#F6F4ED', 'fill-opacity': .07, stroke: '#F6F4ED', 'stroke-opacity': .85, 'stroke-width': 3, 'stroke-linejoin': 'round' }, g);
+  // the colour band at the top of each sheet
+  el('rect', { x: x + 12, y: y + 16, width: 36, height: 10, rx: 5, fill: c }, g);
+  // the shared rules: three identical cream lines on every sheet
+  for (let r = 0; r < 3; r++) el('line', { x1: x + 12, x2: x + W - 14, y1: y + 44 + r * 16, y2: y + 44 + r * 16, stroke: '#F6F4ED', 'stroke-opacity': .7, 'stroke-width': 5, 'stroke-linecap': 'round' }, g);
+  // body lines in the sheet's colour, fewer on the stricter sheets
+  const body = 1 + i;
+  for (let r = 0; r < body; r++) el('line', { x1: x + 12, x2: x + 12 + (r % 2 ? 44 : 60), y1: y + 104 + r * 14, y2: y + 104 + r * 14, stroke: c, 'stroke-opacity': .65, 'stroke-width': 4, 'stroke-linecap': 'round' }, g);
+  // the verdict, a badge at the foot of the sheet
+  const cx = x + W / 2, cy = BOTTOM - 40;
+  const m = marks[i];
+  el('circle', { cx, cy, r: 22, fill: m === 'ask' ? '#231F20' : c, stroke: m === 'ask' ? c : 'none', 'stroke-width': 3, 'stroke-dasharray': m === 'ask' ? '6 5' : '' }, g);
+  const s = { stroke: m === 'ask' ? c : '#231F20', 'stroke-width': 4.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' };
+  if (m === 'lock') { el('rect', { x: cx - 9, y: cy - 2, width: 18, height: 13, rx: 2, fill: '#231F20' }, g); el('path', { ...s, 'stroke-width': 3.5, d: `M${cx - 5.5} ${cy - 2} v-5 a5.5 5.5 0 0 1 11 0 v5` }, g); }
+  if (m === 'cross') el('path', { ...s, d: `M${cx - 8} ${cy - 8} L${cx + 8} ${cy + 8} M${cx + 8} ${cy - 8} L${cx - 8} ${cy + 8}` }, g);
+  if (m === 'ask' || m === 'tick') el('path', { ...s, d: `M${cx - 9} ${cy} l6 7 l12 -14` }, g);
+  if (m === 'warn') el('path', { ...s, d: `M${cx} ${cy - 10} v11 M${cx} ${cy + 9} v.5` }, g);
+});
+// the thread through the shared rules
+const pts = cols.map((_, i) => [X0 + i * (W + GAP) + W - 8, BOTTOM - (200 + i * 34) + 60]);
+el('path', { d: 'M' + [[X0 - 40, pts[0][1] + 28], ...pts, [X0 + 5 * (W + GAP) + 30, pts[4][1] - 28]].map(p => p.join(' ')).join(' L'), fill: 'none', stroke: '#F6F4ED', 'stroke-opacity': .35, 'stroke-width': 2.5, 'stroke-dasharray': '3 7', 'stroke-linecap': 'round' });
+
+// #cover: the policy document
+{
+  const s2 = document.getElementById('art2');
+  const e2 = (n, a, p = s2) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
+  const X = 258, Y = 92, DW = 234, DH = 318, C = 30;
+  const sheet = (dx, dy, op, rot) => e2('path', { d: `M${X} ${Y} h${DW - C} l${C} ${C} V${Y + DH} H${X + 18} l-18 -18 Z`, fill: '#F6F4ED', 'fill-opacity': op, stroke: '#F6F4ED', 'stroke-opacity': op * 2.2, 'stroke-width': 2, transform: `translate(${dx} ${dy}) rotate(${rot} 375 250)` });
+  sheet(-34, 10, .08, -7); sheet(30, 8, .1, 6);
+  // the policy itself
+  e2('path', { d: `M${X} ${Y} h${DW - C} l${C} ${C} V${Y + DH} H${X + 18} l-18 -18 Z`, fill: '#F6F4ED' });
+  e2('path', { d: `M${X + DW - C} ${Y} v${C - 6} a6 6 0 0 0 6 6 h${C - 6}`, fill: '#DCD8CE' });
+  // AI sparkle badge and heading
+  e2('circle', { cx: X + 38, cy: Y + 42, r: 20, fill: '#00BEDD' });
+  const sp = (cx, cy, r, f) => e2('path', { d: `M${cx} ${cy - r} C${cx + r * .18} ${cy - r * .18} ${cx + r * .18} ${cy - r * .18} ${cx + r} ${cy} C${cx + r * .18} ${cy + r * .18} ${cx + r * .18} ${cy + r * .18} ${cx} ${cy + r} C${cx - r * .18} ${cy + r * .18} ${cx - r * .18} ${cy + r * .18} ${cx - r} ${cy} C${cx - r * .18} ${cy - r * .18} ${cx - r * .18} ${cy - r * .18} ${cx} ${cy - r} Z`, fill: f });
+  sp(X + 38, Y + 42, 12, '#231F20');
+  const h = e2('text', { x: X + 68, y: Y + 51, fill: '#231F20', 'font-family': 'AIAD Sans, Arial, sans-serif', 'font-weight': 700, 'font-size': 26, 'letter-spacing': '-0.5' }); h.textContent = 'AI Policy';
+  e2('line', { x1: X + 20, x2: X + DW - 20, y1: Y + 78, y2: Y + 78, stroke: '#231F20', 'stroke-opacity': .15, 'stroke-width': 2 });
+  // five clauses
+  const pill = ['#00BEDD', '#FF7038', '#AC91FF', '#63DF93', '#FA83EB'];
+  const verdict = ['tick', 'tick', 'half', 'cross', 'tick'];
+  pill.forEach((c, i) => {
+    const y = Y + 102 + i * 34;
+    e2('rect', { x: X + 20, y: y - 9, width: 18, height: 18, rx: 5, fill: c });
+    e2('line', { x1: X + 50, x2: X + 50 + (i % 2 ? 108 : 132), y1: y - 4, y2: y - 4, stroke: '#231F20', 'stroke-opacity': .7, 'stroke-width': 5, 'stroke-linecap': 'round' });
+    e2('line', { x1: X + 50, x2: X + 50 + (i % 2 ? 76 : 92), y1: y + 8, y2: y + 8, stroke: '#231F20', 'stroke-opacity': .25, 'stroke-width': 4, 'stroke-linecap': 'round' });
+    const cx = X + DW - 30, cy = y + 2, v = verdict[i];
+    if (v === 'tick') { e2('circle', { cx, cy, r: 12, fill: '#63DF93' }); e2('path', { d: `M${cx - 5} ${cy} l3.5 4 l7 -8`, stroke: '#231F20', 'stroke-width': 3, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }); }
+    if (v === 'cross') { e2('circle', { cx, cy, r: 12, fill: '#231F20' }); e2('path', { d: `M${cx - 4.5} ${cy - 4.5} l9 9 M${cx + 4.5} ${cy - 4.5} l-9 9`, stroke: '#F6F4ED', 'stroke-width': 3, 'stroke-linecap': 'round' }); }
+    if (v === 'half') { e2('circle', { cx, cy, r: 10.75, fill: '#F6F4ED', stroke: '#FF7038', 'stroke-width': 2.5 }); e2('path', { d: `M${cx} ${cy - 12} a12 12 0 0 0 0 24 Z`, fill: '#FF7038' }); }
+  });
+  // signature and approval seal
+  e2('path', { d: `M${X + 22} ${Y + 292} c10 -18 18 -18 20 -4 s8 10 16 -6 s10 -8 14 2 s10 4 18 -6`, stroke: '#231F20', 'stroke-width': 2.5, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+  e2('line', { x1: X + 20, x2: X + 120, y1: Y + 302, y2: Y + 302, stroke: '#231F20', 'stroke-opacity': .3, 'stroke-width': 2 });
+  const sx = X + DW - 28, sy = Y + DH - 24;
+  e2('circle', { cx: sx, cy: sy, r: 32, fill: '#FA83EB' });
+  e2('circle', { cx: sx, cy: sy, r: 25, fill: 'none', stroke: '#231F20', 'stroke-width': 2, 'stroke-dasharray': '4 4' });
+  sp(sx, sy, 13, '#231F20');
+  // two loose sparkles off the page
+  sp(X - 46, Y + 70, 14, '#00BEDD'); sp(X + DW + 52, Y + 120, 10, '#AC91FF'); sp(X + DW + 34, Y + 34, 6, '#FA83EB');
+}
+</script>
+</body></html>

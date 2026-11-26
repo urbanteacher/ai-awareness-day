@@ -22,7 +22,7 @@ class AIRB_Funnel {
 	public static function stage2_products(): array {
 		return array(
 			'governance'           => array(
-				'product' => __( 'Develop your AI policy (DfE template)', 'ai-risk-benchmark' ),
+				'product' => __( 'Develop your AI policy (DfE guidance)', 'ai-risk-benchmark' ),
 				'reason'  => __( 'Low governance score', 'ai-risk-benchmark' ),
 			),
 			'human_oversight'      => array(
@@ -290,7 +290,7 @@ class AIRB_Funnel {
 		$band_rank = array( 'low' => 0, 'moderate' => 1, 'high' => 2, 'critical' => 3 );
 
 		if ( self::domain_at_least( $domains, 'governance', 'moderate' ) ) {
-			$actions[] = __( 'Implement or refresh your AI policy (adapt the DfE AI policy template)', 'ai-risk-benchmark' );
+			$actions[] = __( 'Implement or refresh your AI policy (using DfE guidance)', 'ai-risk-benchmark' );
 		}
 		if ( self::domain_at_least( $domains, 'human_oversight', 'moderate' ) ) {
 			$actions[] = __( 'Train staff on verification and human oversight', 'ai-risk-benchmark' );
@@ -336,7 +336,7 @@ class AIRB_Funnel {
 	}
 
 	/**
-	 * AI policy support offer (official DfE template) when governance is weak.
+	 * AI policy support offer (DfE guidance; there is no official DfE template) when governance is weak.
 	 *
 	 * @param array<string, array<string, mixed>> $domain_scores Scores.
 	 * @param array<string, string>               $profile       Profile.
@@ -361,15 +361,15 @@ class AIRB_Funnel {
 		$body        = $profile_txt
 			? sprintf(
 				/* translators: %s: school profile e.g. "Secondary · Standalone school" */
-				__( 'Audit complete — school profile identified (%s). The DfE publishes a free AI policy template you can adapt to your phase, structure and governance maturity. Contact the AI Awareness Day team if you need support tailoring it.', 'ai-risk-benchmark' ),
+				__( 'Audit complete — school profile identified (%s). There is no official DfE AI policy template, but its guidance tells you what your policies need to cover for your phase, structure and governance maturity. Contact the AI Awareness Day team if you need support tailoring it.', 'ai-risk-benchmark' ),
 				$profile_txt
 			)
-			: __( 'Audit complete. Adapt the official DfE AI policy template to your school phase, structure, AI usage and governance maturity. Contact the AI Awareness Day team if you need support tailoring it.', 'ai-risk-benchmark' );
+			: __( 'Audit complete. Use DfE guidance to set out an AI policy that fits your school phase, structure, AI usage and governance maturity. Contact the AI Awareness Day team if you need support tailoring it.', 'ai-risk-benchmark' );
 
 		return array(
 			'title'    => __( 'Develop your AI policy', 'ai-risk-benchmark' ),
 			'body'     => $body,
-			'cta_text' => __( 'View DfE AI policy template', 'ai-risk-benchmark' ),
+			'cta_text' => __( 'View DfE AI guidance', 'ai-risk-benchmark' ),
 			'cta_url'  => $url,
 		);
 	}

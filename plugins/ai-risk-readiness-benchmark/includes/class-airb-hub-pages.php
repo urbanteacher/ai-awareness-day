@@ -24,6 +24,8 @@ class AIRB_Hub_Pages {
 
 	private const PATCH_HUB_INTEREST_HASH = 'airb_hub_interest_hash_v2';
 
+	private const PATCH_POLICY_TEMPLATE_CLAIM = 'airb_hub_policy_template_claim_v1';
+
 	/**
 	 * Register front-end hooks (interactive checklist assets).
 	 */
@@ -141,6 +143,7 @@ class AIRB_Hub_Pages {
 			self::maybe_upgrade_intervention_content();
 			self::maybe_fix_hub_contact_cta_links();
 			self::maybe_fix_hub_interest_hash_links();
+			self::maybe_fix_policy_template_claim();
 			return;
 		}
 
@@ -158,6 +161,41 @@ class AIRB_Hub_Pages {
 		self::maybe_upgrade_intervention_content();
 		self::maybe_fix_hub_contact_cta_links();
 		self::maybe_fix_hub_interest_hash_links();
+		self::maybe_fix_policy_template_claim();
+	}
+
+	/**
+	 * Once: correct the School AI Policy page, which said the DfE publishes an AI policy template. It does not: DfE guidance asks
+	 * schools to update existing policies, and JCQ asks exam centres to cover AI in their malpractice policy. Replaces only the
+	 * affected wording (title, excerpt and four phrases), so any other edits made in the editor are kept.
+	 */
+	public static function maybe_fix_policy_template_claim(): void {
+		if ( get_option( self::PATCH_POLICY_TEMPLATE_CLAIM ) === 'yes' || ! function_exists( 'get_page_by_path' ) ) {
+			return;
+		}
+		$page = get_page_by_path( 'ai-policy-generator', OBJECT, 'page' );
+		if ( $page instanceof WP_Post ) {
+			$swap    = array(
+				'Adapt the Official DfE AI Policy Template to Your School' => 'Write or Update Your School’s AI Policy Using DfE Guidance',
+				'The Department for Education publishes a free AI policy template that schools can adapt — there is no need to start from scratch. This page shows you how to tailor it to your context,' => 'There is no official DfE AI policy template, and no law requires a standalone AI policy. The DfE asks schools to update their existing safeguarding, online safety and behaviour policies for the risks of AI, and exam centres must cover AI misuse in their JCQ malpractice policy. This page shows you how to set out those expectations for your context,',
+				'Download the official DfE AI policy template and adapt it using the sections above.' => 'Read the DfE’s support materials for school leaders, then draft or update your policy using the sections above.',
+				'(policy guidance &amp; template)' => '(support materials for leaders)',
+			);
+			$content = str_replace( array_keys( $swap ), array_values( $swap ), (string) $page->post_content );
+			$title   = 'School AI Policy: DfE Templates & Support' === $page->post_title ? 'School AI Policy: Guidance & Support' : $page->post_title;
+			$excerpt = str_replace( 'Adapt the official DfE AI policy template to your school,', 'Write or update your school’s AI policy using DfE guidance,', (string) $page->post_excerpt );
+			if ( $content !== $page->post_content || $title !== $page->post_title || $excerpt !== $page->post_excerpt ) {
+				wp_update_post(
+					array(
+						'ID'           => (int) $page->ID,
+						'post_title'   => $title,
+						'post_excerpt' => $excerpt,
+						'post_content' => $content,
+					)
+				);
+			}
+		}
+		update_option( self::PATCH_POLICY_TEMPLATE_CLAIM, 'yes', true );
 	}
 
 	/**

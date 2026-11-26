@@ -63,6 +63,7 @@ require_once $aiad_dir . '/inc/article-november-2026-newsletter.php';
 require_once $aiad_dir . '/inc/article-crazy-week-in-ai.php';
 require_once $aiad_dir . '/inc/article-two-out-of-three.php';
 require_once $aiad_dir . '/inc/article-milburn-review.php';
+require_once $aiad_dir . '/inc/article-ai-policy-compared.php';
 require_once $aiad_dir . '/inc/article-literacy-table.php';
 require_once $aiad_dir . '/inc/homepage-blocks.php';
 require_once $aiad_dir . '/inc/homepage-migration.php';
