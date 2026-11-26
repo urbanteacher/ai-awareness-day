@@ -4,7 +4,7 @@
  * Martin's close reading of ten institutions' published AI policies (24 November 2026), as a campaign update (the timeline post
  * type, shown at /timeline/). The text is inc/articles/england-ai-policy-compared.html, block markup made from the Markdown draft.
  * Revised 25 November 2026 after an editorial review: sections reordered, facts checked against the policies, and a closing
- * "six questions" checklist added, so it no longer follows the Markdown draft line for line.
+ * "six checks" checklist added, so it no longer follows the Markdown draft line for line.
  * Its two figures (assets/images/articles/ai-policy/: policy-grid, which replaced the draft's comparison table, and learner-journey)
  * are imported into the media library in place of their IMG:{name} placeholders. The text-free cover
  * (assets/images/articles/ai-policy-card.jpg, one illustrated AI policy document with colour-coded clauses, ticks
@@ -134,3 +134,41 @@ function aiad_fix_article_ai_policy_residue(): void {
 	update_option( 'aiad_article_ai_policy_residue_fixed', '1' );
 }
 add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_ai_policy_residue_fixed', 'aiad_fix_article_ai_policy_residue' ); }, 61 );
+
+/**
+ * One-time (26 Nov 2026): the "six questions" became "six checks", each rewritten to be answerable yes or no. Brings a post
+ * published before then into line with the article file; only text still in its old form is changed.
+ */
+function aiad_fix_article_ai_policy_checks(): void {
+	$post = get_page_by_path( 'england-ai-policy-schools-colleges-universities', OBJECT, 'timeline' );
+	if ( $post ) {
+		$swaps   = array(
+		'<h2 class="wp-block-heading">Six questions to ask of your own policy</h2>' =>
+			'<h2 class="wp-block-heading">Six checks for your own policy</h2>',
+		'<p>The ten documents suggest six questions any head, governor or trust leader can put to their own policy this term. If you cannot answer one, that is the gap.</p>' =>
+			'<p>The ten documents suggest six checks any head, governor or trust leader can run on their own policy this term. Each has a yes or no answer. A no is the gap.</p>',
+		'<li><strong>Who held the pen?</strong> If IT, governance or a template wrote the first draft, has a teacher rewritten the sections on learning and assessment?</li>' =>
+			'<li><strong>Did a teacher write the parts on teaching and assessment?</strong> If IT, governance or a template wrote the first draft, those sections need a teacher’s rewrite.</li>',
+		'<li><strong>Does it fit your pupils?</strong> Does it carry rules borrowed from another phase, or tools that no longer exist?</li>' =>
+			'<li><strong>Is it written for your phase?</strong> No GCSE exam rules in a primary policy, and no tools that no longer exist.</li>',
+		'<li><strong>Have you decided, or inherited, the hard calls?</strong> May staff mark or write reports with AI? Do detector scores count as evidence?</li>' =>
+			'<li><strong>Does it say whether staff may mark or write reports with AI, and whether a detector score counts as evidence?</strong> These are the calls policies most often leave out or copy from elsewhere.</li>',
+		'<li><strong>Is the review date real?</strong> Did the promised review happen?</li>' =>
+			'<li><strong>Has it been reviewed when it promised?</strong> Check the review date on the front against the last time anyone changed it.</li>',
+		'<li><strong>What happens when the platform goes down?</strong> Could staff and pupils work for two days without it?</li>' =>
+			'<li><strong>Could staff and pupils work for two days without the AI platform?</strong> When email went down, the approved AI went with it.</li>',
+		'<li><strong>Does it reach beyond staff and pupils?</strong> What does it say about parents’ own use of AI, and about a deepfake of a pupil?</li>' =>
+			'<li><strong>Does it say what happens if someone makes a deepfake of a pupil or a member of staff, and what it expects of parents?</strong> Most policies stop at staff and pupils.</li>',
+		'and ask the six questions above' =>
+			'and run the six checks above',
+		);
+		$content = str_replace( array_keys( $swaps ), array_values( $swaps ), (string) $post->post_content );
+		if ( $content !== (string) $post->post_content ) {
+			global $wpdb;
+			$wpdb->update( $wpdb->posts, array( 'post_content' => $content ), array( 'ID' => $post->ID ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			clean_post_cache( $post->ID );
+		}
+	}
+	update_option( 'aiad_article_ai_policy_checks_fixed', '1' );
+}
+add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_ai_policy_checks_fixed', 'aiad_fix_article_ai_policy_checks' ); }, 62 );
