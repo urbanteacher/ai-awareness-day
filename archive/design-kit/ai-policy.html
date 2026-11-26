@@ -61,6 +61,21 @@ body { background: #888; padding: 20px; width: 800px; display: grid; gap: 20px; 
 .note b.t { display: flex; align-items: center; gap: 8px; font-size: 15.5px; margin-bottom: 6px; }
 .note .pin { margin: 0; background: #F6F4ED; color: #231F20; vertical-align: 0; }
 .note .bar { display: block; width: 34px; height: 5px; border-radius: 3px; margin-bottom: 10px; }
+.li { width: 1080px; height: 1350px; background: #231F20; color: #F6F4ED; font-family: 'AIAD Sans', Arial, sans-serif; padding: 92px 80px 70px; position: relative; overflow: hidden; }
+.li .glow { position: absolute; border-radius: 50%; filter: blur(90px); }
+.li .kick { display: flex; align-items: center; gap: 22px; font-size: 27px; font-weight: 600; letter-spacing: .14em; position: relative; }
+.li .kick i { display: inline-block; width: 22px; height: 22px; margin-right: 8px; }
+.li .tag { display: inline-block; background: #FA83EB; color: #231F20; font-size: 30px; font-weight: 700; letter-spacing: .06em; padding: 16px 28px; margin: 54px 0 34px; transform: rotate(-2deg); position: relative; }
+.li h1 { font-size: 104px; line-height: .98; letter-spacing: -.045em; font-weight: 700; position: relative; }
+.li .dek { font-size: 38px; line-height: 1.32; margin-top: 30px; max-width: 900px; position: relative; }
+.li .dek b { color: #FA83EB; }
+.li .lstairs { position: absolute; left: 80px; right: 80px; bottom: 150px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; align-items: end; }
+.li .lstep { background: #F6F4ED; color: #231F20; padding: 18px 16px 20px; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px)); }
+.li .lstep .age { display: inline-block; font-size: 26px; font-weight: 700; padding: 6px 14px; border-radius: 999px; margin-bottom: 12px; }
+.li .lstep .where { font-size: 18px; font-weight: 600; color: #54504E; margin-bottom: 8px; line-height: 1.2; }
+.li .lstep .what { font-size: 23px; font-weight: 700; line-height: 1.18; letter-spacing: -.01em; }
+.li .lfoot { position: absolute; left: 80px; right: 80px; bottom: 62px; display: flex; justify-content: space-between; align-items: baseline; font-size: 30px; font-weight: 700; }
+.li .lfoot u { text-underline-offset: 6px; } .li .lfoot span { font-weight: 600; letter-spacing: .1em; font-size: 27px; }
 </style></head><body>
 <!-- #cover-v1-sheets: the first cover (five sheets, same header rules, different verdicts), kept as an alternate; archived render at
      ai-policy-dropped/cover-v1-five-sheets.jpg. -->
@@ -122,6 +137,19 @@ body { background: #888; padding: 20px; width: 800px; display: grid; gap: 20px; 
   <p class="foot">AI Awareness Day · Thursday 29 April 2027 · aiawarenessday.co.uk</p>
 </section>
 
+<!-- #linkedin: the article's LinkedIn card (26 Nov 2026), 1080×1350, in the style of literacy-table-linkedin/slide-01: dark ground,
+     pillar squares, pink tag, big headline, and the learner journey as a rising stair of cream cards. -->
+<section id="linkedin" class="li">
+  <div class="glow" style="width:520px;height:520px;right:-180px;top:-160px;background:rgba(0,190,221,.22)"></div>
+  <div class="glow" style="width:560px;height:560px;left:-220px;bottom:-200px;background:rgba(250,131,235,.20)"></div>
+  <div class="kick"><span><i style="background:#00BEDD"></i><i style="background:#FF7038"></i><i style="background:#AC91FF"></i><i style="background:#63DF93"></i><i style="background:#FA83EB"></i></span>NEW ARTICLE</div>
+  <div class="tag">AI POLICY</div>
+  <h1>Same country.<br>Opposite AI rules.</h1>
+  <p class="dek">We read <b>10 AI policies</b>, from a Sheffield primary to three universities. What a learner may do depends on the building.</p>
+  <div class="lstairs" id="lstairs"></div>
+  <div class="lfoot"><div>AI Awareness Day <u>2027</u></div><span>READ THE ARTICLE →</span></div>
+</section>
+
 <script>
 const GRID = {
   cols: ['St Paul’s Girls’', 'Glenthorne', 'Learning Academies', 'Ecclesall Primary', 'Leicester College', 'Salford'],
@@ -148,6 +176,8 @@ const STEPS = [
 ];
 document.getElementById('stairs').innerHTML = STEPS.map(([age, where, what, c], i) =>
   `<div class="step" style="min-height:${190 + i * 30}px"><div class="age" style="background:${c}">Age ${age}</div><div class="where">${where}</div><div class="what">${what}</div></div>`).join('');
+document.getElementById('lstairs').innerHTML = STEPS.map(([age, where, what, c], i) =>
+  `<div class="lstep" style="min-height:${250 + i * 46}px"><div class="age" style="background:${c}">Age ${age}</div><div class="where">${where}</div><div class="what">${what}</div></div>`).join('');
 
 // Five sheets, 88 wide, 12 apart, stepping up 34px each: x from 135 to 535, bottoms on y 404.
 const cols = ['#00BEDD', '#FF7038', '#AC91FF', '#63DF93', '#FA83EB'];

@@ -1,5 +1,5 @@
 // AI policy comparison post images: PW=<folder containing node_modules/playwright> node render-ai-policy.mjs <image folder> <cover.jpg>
-// Writes policy-grid.png, learner-journey.png and reading-list-residue.png (1440 wide, 2×, transparent corners) into the image folder and #cover from
+// Writes policy-grid.png, learner-journey.png and reading-list-residue.png (1440 wide, 2×, transparent corners) into the image folder, the LinkedIn card (#linkedin) as ai-policy-linkedin.png beside this script, and #cover from
 // ai-policy.html as a 1500×1000 JPEG.
 import { createRequire } from 'node:module';
 import fs from 'node:fs'; import path from 'node:path'; import { pathToFileURL, fileURLToPath } from 'node:url';
@@ -14,5 +14,6 @@ await p.locator('#cover').screenshot({ path: COVER, type: 'jpeg', quality: 88 })
 await p.addStyleTag({ content: 'html,body{background:transparent!important}' });
 await p.locator('#grid').screenshot({ path: path.join(OUT, 'policy-grid.png'), omitBackground: true });
 await p.locator('#journey').screenshot({ path: path.join(OUT, 'learner-journey.png'), omitBackground: true });
+await p.locator('#linkedin').screenshot({ path: path.join(here, 'ai-policy-linkedin.png') });
 await p.locator('#residue').screenshot({ path: path.join(OUT, 'reading-list-residue.png'), omitBackground: true });
 await b.close(); fs.rmSync(built);
